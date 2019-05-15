@@ -1,0 +1,9 @@
+name: data_struct
+description: data structure.
+version: 0.0.1
+
+environment:
+  sdk: '>=2.2.0 <3.0.0'
+
+dependencies:
+  #none.
