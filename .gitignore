@@ -14,4 +14,10 @@ doc/api/
 
 # Files and directories created by vscode
 .vscode/
+
+# Files created by os.
 .DS_Store
+
+# Files for development
+bin/main.dart
+bin/debug.dart

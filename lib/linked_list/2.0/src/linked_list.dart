@@ -5,7 +5,7 @@ class LinkedList<E> extends LinkedListBase<E> implements Iterable<E> {
 
   LinkedList();
 
-  factory LinkedList.from(Iterable<E> elements) {
+  factory LinkedList.of(Iterable<E> elements) {
     var list = LinkedList<E>();
     list.addAll(elements);
     return list;
@@ -45,7 +45,7 @@ class LinkedList<E> extends LinkedListBase<E> implements Iterable<E> {
     _length = 0;
   }
 
-  LinkedList<E> copy() => LinkedList<E>.from(this);
+  LinkedList<E> copy() => LinkedList<E>.of(this);
 
   bool insertAfter(E given, E value) {
     if (super.insertAfter(given, value)) {
