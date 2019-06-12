@@ -43,7 +43,7 @@ class HashTable<K, V> {
   bool contains(K key) => _find(key) != -1;
 
   void clear() {
-    _table = null;
+    _table = List(_initalSize);
     _itemCount = 0;
   }
 
@@ -114,8 +114,10 @@ class HashTable<K, V> {
   int _rehashStep(int hscode) => _prime - hscode % _prime;
 
   static int _hashCode<K>(K key) {
-    var str =
-        key is num ? (sqrt(key.abs() * 0.618) * pi).toString() : key.toString();
+    var str = key is num
+        ? key < 0 ? '-${sqrt(-key * pi) / 0.618}' : '${sqrt(key * pi) / 0.618}'
+        : key.toString();
+
     return DJBHash(str);
   }
 }
