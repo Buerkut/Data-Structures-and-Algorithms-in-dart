@@ -8,7 +8,7 @@ class BinaryTree<E extends Comparable<E>> {
 
   BinaryTree() : _nodeNumbers = 0;
 
-  factory BinaryTree.of(Iterable<Comparable<E>> elements) {
+  factory BinaryTree.fromIterables(Iterable<Comparable<E>> elements) {
     var tree = BinaryTree<E>();
     for (var e in elements) tree.insert(e);
     return tree;
