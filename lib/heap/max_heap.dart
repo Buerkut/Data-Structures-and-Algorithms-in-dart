@@ -40,13 +40,6 @@ class MaxHeap<E extends Comparable<E>> {
     return e;
   }
 
-  void sort() {
-    while (_size-- > 0) {
-      _swap(0, _size);
-      _maxHeapify(0);
-    }
-  }
-
   String toString() => _heap.getRange(0, size).toString();
 
   void _buildMaxHeap() {

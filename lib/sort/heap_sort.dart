@@ -1,9 +1,9 @@
 void heapSort<E extends Comparable<E>>(List<E> a) {
   _buildMaxHeap(a);
 
-  for (var i = a.length; i > 0; i--) {
-    _swap(a, 0, i - 1);
-    _maxHeapify(a, 0, i - 1);
+  for (var i = a.length - 1; i > 0; i--) {
+    _swap(a, 0, i);
+    _maxHeapify(a, 0, i);
   }
 }
 
