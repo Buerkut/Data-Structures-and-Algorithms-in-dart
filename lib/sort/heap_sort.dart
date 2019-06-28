@@ -8,7 +8,7 @@ void heapSort<E extends Comparable<E>>(List<E> a) {
 }
 
 void _buildMaxHeap<E extends Comparable<E>>(List<E> a) {
-  for (var i = (a.length - 2) >> 1; i >= 0; i--) _maxHeapify(a, i, a.length);
+  for (var i = (a.length >> 1) - 1; i >= 0; i--) _maxHeapify(a, i, a.length);
 }
 
 void _maxHeapify<E extends Comparable<E>>(List<E> a, int i, int size) {

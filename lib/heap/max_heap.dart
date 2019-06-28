@@ -43,7 +43,7 @@ class MaxHeap<E extends Comparable<E>> {
   String toString() => _heap.getRange(0, size).toString();
 
   void _buildMaxHeap() {
-    for (var i = (_size - 2) >> 1; i >= 0; i--) _maxHeapify(i);
+    for (var i = (_size >> 1) - 1; i >= 0; i--) _maxHeapify(i);
   }
 
   void _maxHeapify(int i) {

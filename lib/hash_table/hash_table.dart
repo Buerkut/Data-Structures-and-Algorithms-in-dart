@@ -115,7 +115,9 @@ class HashTable<K, V> {
 
   static int _hashCode<K>(K key) {
     var str = key is num
-        ? key < 0 ? '-${sqrt(-key * pi) / 0.618}' : '${sqrt(key * pi) / 0.618}'
+        ? key < 0
+            ? '-${sqrt(-key * pi * e) / 0.618}'
+            : '${sqrt(key * pi * e) / 0.618}'
         : key.toString();
 
     return DJBHash(str);

@@ -43,7 +43,7 @@ class MinHeap<E extends Comparable<E>> {
   String toString() => _heap.getRange(0, size).toString();
 
   void _buildMinHeap() {
-    for (var i = (_size - 2) >> 1; i >= 0; i--) _minHeapify(i);
+    for (var i = (_size >> 1) - 1; i >= 0; i--) _minHeapify(i);
   }
 
   void _minHeapify(int i) {

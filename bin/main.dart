@@ -4,7 +4,7 @@ import 'package:data_struct/sort/heap_sort.dart';
 
 void main() {
   var rd = Random();
-  List<num> a = List.generate(10, (_) => rd.nextInt(200));
+  List<num> a = List.generate(12, (_) => rd.nextInt(200));
   // var queue = PriorityQueue.fromIterables(a);
   print(a);
   print('---------------------------------');
