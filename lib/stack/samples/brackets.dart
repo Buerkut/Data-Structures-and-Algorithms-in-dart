@@ -1,5 +1,5 @@
 import 'dart:io';
-import '../low_level_stack.dart';
+import '../src/low_level_stack.dart';
 
 void run() {
   var ins = stdin.readLineSync();

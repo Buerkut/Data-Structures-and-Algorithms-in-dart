@@ -1,4 +1,4 @@
-import 'package:data_struct/stack/stack.dart';
+import '../src/stack.dart';
 
 num calc(String ins) {
   try {

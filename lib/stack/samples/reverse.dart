@@ -1,6 +1,6 @@
 import 'dart:io';
 import 'dart:convert';
-import '../low_level_stack.dart';
+import '../src/low_level_stack.dart';
 
 void run() {
   // var s = stdin.readLineSync();

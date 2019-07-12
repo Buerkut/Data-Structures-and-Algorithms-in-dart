@@ -1,4 +1,4 @@
-import '../stack.dart';
+import '../src/stack.dart';
 
 void run() {
   var ins = '(1*0.5+1)+2*(1+2*(7-1*2*3)-1)-1.5';

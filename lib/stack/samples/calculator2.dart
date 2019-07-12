@@ -1,5 +1,5 @@
 /// postfix
-import 'package:data_struct/stack/stack.dart';
+import '../src/stack.dart';
 
 num calc(String exp) {
   try {

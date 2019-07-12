@@ -5,7 +5,7 @@ class Stack<E> {
 
   Stack(this.capacity)
       : _cursor = -1,
-        _stack = List<E>(capacity);
+        _stack = List(capacity);
 
   bool get isEmpty => _cursor == -1;
   bool get isNotEmpty => _cursor >= 0;
