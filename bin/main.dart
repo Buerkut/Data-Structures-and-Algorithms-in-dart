@@ -4,8 +4,8 @@ import 'package:data_struct/graph/graph.dart';
 import 'package:data_struct/graph/vertex.dart';
 
 void main() {
-  var labels = ['A', 'B', 'C', 'D', 'E']; //, 'F', 'G', 'H', 'I'];
-  var vertices = <Vertex>[], g = Graph(5);
+  var labels = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I'];
+  var vertices = <Vertex>[], g = Graph(10);
 
   for (var label in labels) vertices.add(Vertex(label));
   for (var v in vertices) g.addVertex(v);
@@ -20,7 +20,9 @@ void main() {
   }
 
   print('---------------------------------');
-  print('Visits: ');
+  print('Visits by dfs: ');
   g.dfs((v) => stdout.write('${v.label} '));
   print('\n---------------------------------');
+  print('Visits by bfs: ');
+  g.bfs((v) => stdout.write('${v.label} '));
 }

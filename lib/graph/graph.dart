@@ -22,21 +22,22 @@ class Graph {
   }
 
   void dfs(void f(Vertex v)) {
-    var vts = Stack<Vertex>();
+    var vxs = Stack<Vertex>();
     for (var i = 0; i < nVerts; i++) {
       if (!_vertices[i].wasVisited) {
         _vertices[i].wasVisited = true;
         f(_vertices[i]);
-        vts.push(_vertices[i]);
+        vxs.push(_vertices[i]);
 
-        while (vts.isNotEmpty) {
-          var j = _getUnvisited(_vertices.indexOf(vts.top));
+        while (vxs.isNotEmpty) {
+          var nbs = _getUnvisited(_vertices.indexOf(vxs.top));
+          var j = nbs.isNotEmpty ? nbs.first : -1;
           if (j == -1) {
-            vts.pop();
+            vxs.pop();
           } else {
             _vertices[j].wasVisited = true;
             f(_vertices[j]);
-            vts.push(_vertices[j]);
+            vxs.push(_vertices[j]);
           }
         }
       }
@@ -46,13 +47,28 @@ class Graph {
   }
 
   void bfs(void f(Vertex v)) {
-    for (var i = 0; i < nVerts; i++) {}
+    var vxq = Queue<Vertex>();
+    for (var i = 0; i < nVerts; i++) {
+      if (!_vertices[i].wasVisited) {
+        _vertices[i].wasVisited = true;
+        f(_vertices[i]);
+        vxq.push(_vertices[i]);
+
+        while (vxq.isNotEmpty)
+          for (var j in _getUnvisited(_vertices.indexOf(vxq.pull()))) {
+            _vertices[j].wasVisited = true;
+            f(_vertices[j]);
+            vxq.push(_vertices[j]);
+          }
+      }
+    }
+
+    _reset();
   }
 
-  int _getUnvisited(int i) {
+  Iterable<int> _getUnvisited(int i) sync* {
     for (var j = 0; j < _nVerts; j++)
-      if (_adjMatrix[i][j] == 1 && !_vertices[j].wasVisited) return j;
-    return -1;
+      if (_adjMatrix[i][j] == 1 && !_vertices[j].wasVisited) yield j;
   }
 
   void _reset() {
