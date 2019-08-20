@@ -139,9 +139,7 @@ class LinkedList<E> extends LinkedListBase<E> implements Iterable<E> {
   }
 
   Iterable<T> expand<T>(Iterable<T> func(E element)) sync* {
-    for (var e in this) {
-      for (var ee in func(e)) yield ee;
-    }
+    for (var e in this) yield* func(e);
   }
 
   E firstWhere(bool test(E element), {E orElse()}) {
@@ -167,8 +165,8 @@ class LinkedList<E> extends LinkedListBase<E> implements Iterable<E> {
   }
 
   Iterable<E> followedBy(Iterable<E> other) sync* {
-    for (var e in this) yield e;
-    for (var e in other) yield e;
+    yield* this;
+    yield* other;
   }
 
   String join([String separator = '']) {

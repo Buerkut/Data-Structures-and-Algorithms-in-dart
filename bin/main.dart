@@ -1,7 +1,7 @@
 import 'dart:io';
 import 'dart:math';
-import 'package:data_struct/graph/graph.dart';
 import 'package:data_struct/graph/vertex.dart';
+import 'package:data_struct/graph/graph.dart';
 
 void main() {
   var labels = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I'];
@@ -11,7 +11,7 @@ void main() {
   for (var v in vertices) g.addVertex(v);
 
   var rd = Random();
-  for (var i = 0; i < 8; i++) {
+  for (var i = 0; i < 10; i++) {
     var start = rd.nextInt(g.nVerts), end = rd.nextInt(g.nVerts);
     if (start != end) {
       print('${vertices[start].label} ${vertices[end].label}');
