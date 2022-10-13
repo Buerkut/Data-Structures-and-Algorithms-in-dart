@@ -1,6 +1,7 @@
 import 'package:data_struct/stack/stack.dart';
 import 'package:data_struct/queue/queue.dart' show Queue;
 import './vertex.dart';
+import './edge.dart';
 
 class Graph {
   final List<Vertex?> _vertices;
@@ -21,12 +22,12 @@ class Graph {
     _adjMatrix[end][start] = 1;
   }
 
-  void dfs(void f(Vertex? v)) {
+  void dfs(void f(Vertex v)) {
     var vxs = Stack<Vertex>();
     for (var i = 0; i < nVerts; i++) {
       if (!_vertices[i]!.wasVisited) {
         _vertices[i]!.wasVisited = true;
-        f(_vertices[i]);
+        f(_vertices[i]!);
         vxs.push(_vertices[i]!);
 
         while (vxs.isNotEmpty) {
@@ -36,7 +37,7 @@ class Graph {
             vxs.pop();
           } else {
             _vertices[j]!.wasVisited = true;
-            f(_vertices[j]);
+            f(_vertices[j]!);
             vxs.push(_vertices[j]!);
           }
         }
@@ -64,6 +65,37 @@ class Graph {
     }
 
     _reset();
+  }
+
+  // minimum spanning tree by depth first
+  List<Edge> mst() {
+    var vxstk = Stack<int>();
+    _vertices[0]!.wasVisited = true;
+    vxstk.push(0);
+
+    var mstTree = <Edge>[];
+
+    while (vxstk.isNotEmpty) {
+      int currv = vxstk.top;
+      var adjvs = _getUnvisited(currv);
+      var nextv = adjvs.isNotEmpty ? adjvs.first : -1;
+      if (nextv == -1) {
+        vxstk.pop();
+      } else {
+        _vertices[nextv]!.wasVisited = true;
+        vxstk.push(nextv);
+        mstTree.add(Edge(currv, nextv));
+      }
+    }
+    return mstTree;
+  }
+
+  void displayMstTree() {
+    var mstTree = mst();
+    for (var edge in mstTree) {
+      print(
+          'from ${_vertices[edge.from]!.label} to ${_vertices[edge.to]!.label}');
+    }
   }
 
   Iterable<int> _getUnvisited(int i) sync* {
