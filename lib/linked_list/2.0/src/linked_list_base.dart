@@ -22,7 +22,7 @@ abstract class LinkedListBase<E> {
     var sb = StringBuffer();
     sb.write('[');
     if (isNotEmpty) {
-      for (var node = head; node != tail; node = node!.next) {
+      for (var node = head; node != tail; node = node.next) {
         sb.write('${node!.value}, ');
       }
       sb.write(tail!.value);
