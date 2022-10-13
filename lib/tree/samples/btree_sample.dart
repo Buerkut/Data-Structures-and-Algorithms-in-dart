@@ -25,7 +25,7 @@ void btreeTest<E extends Comparable<E>>(List<E> list) {
 }
 
 bool check(BTree tree) {
-  if (!tree.isEmpty) assert(tree.height == _walk(tree.root, tree.order));
+  if (!tree.isEmpty) assert(tree.height == _walk(tree.root!, tree.order));
   return true;
 }
 

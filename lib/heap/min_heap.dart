@@ -1,8 +1,8 @@
 class MinHeap<E extends Comparable<E>> {
-  List<E> _heap;
-  int _size;
+  late List<E> _heap;
+  late int _size;
 
-  MinHeap([Iterable<Comparable<E>> elements]) {
+  MinHeap([Iterable<E>? elements]) {
     elements ??= <E>[];
     _heap = elements.toList();
     _size = elements.length;
@@ -13,9 +13,9 @@ class MinHeap<E extends Comparable<E>> {
 
   int get size => _size;
 
-  E get top => _size == 0 ? null : _heap[0];
+  E? get top => _size == 0 ? null : _heap[0];
 
-  E popTop() => _size == 0 ? null : pop(1).first;
+  E? popTop() => _size == 0 ? null : pop(1).first;
 
   Iterable<E> pop(int n) sync* {
     if (n > _size) n = _size;

@@ -1,8 +1,8 @@
 class QuaternaryTree<E extends Comparable<E>> {
-  QuaterNode<E> _root;
+  QuaterNode<E>? _root;
   int _elementsCount;
 
-  factory QuaternaryTree.of(Iterable<Comparable<E>> elements) {
+  factory QuaternaryTree.of(Iterable<E> elements) {
     var tree = QuaternaryTree<E>();
     for (var e in elements) tree.insert(e);
     return tree;
@@ -11,7 +11,7 @@ class QuaternaryTree<E extends Comparable<E>> {
   QuaternaryTree() : _elementsCount = 0;
 
   int get elementsCount => _elementsCount;
-  QuaterNode<E> get root => _root;
+  QuaterNode<E>? get root => _root;
 
   int get height {
     var h = 0, c = root;
@@ -26,7 +26,7 @@ class QuaternaryTree<E extends Comparable<E>> {
 
   bool contains(E value) => find(value) != null;
 
-  QuaterNode<E> find(E value) {
+  QuaterNode<E>? find(E value) {
     var c = root;
     while (c != null) {
       var i = 0;
@@ -72,10 +72,10 @@ class QuaternaryTree<E extends Comparable<E>> {
   }
 
   void traverse(void func(List<E> items)) {
-    if (!isEmpty) _traverse(_root, func);
+    if (!isEmpty) _traverse(_root!, func);
   }
 
-  void _fixAfterIns(QuaterNode<E> c) {
+  void _fixAfterIns(QuaterNode<E>? c) {
     while (c != null && c.isOverflow) {
       var t = _split(c);
       c = t.parent != null ? _absorb(t) : null;
@@ -93,8 +93,8 @@ class QuaternaryTree<E extends Comparable<E>> {
     nc.parent = c.parent;
     if (c.parent != null) {
       var i = 0;
-      while (c.parent.branches[i] != c) i++;
-      c.parent.branches[i] = nc;
+      while (c.parent!.branches[i] != c) i++;
+      c.parent!.branches[i] = nc;
     } else {
       _root = nc;
     }
@@ -111,7 +111,7 @@ class QuaternaryTree<E extends Comparable<E>> {
 
   QuaterNode<E> _absorb(QuaterNode<E> c) {
     var i = 0, p = c.parent;
-    while (p.branches[i] != c) i++;
+    while (p!.branches[i] != c) i++;
     p.items.insertAll(i, c.items);
     p.branches.replaceRange(i, i + 1, c.branches);
     c.branches.forEach((b) => b.parent = p);
@@ -129,8 +129,8 @@ class QuaternaryTree<E extends Comparable<E>> {
     } else {
       var ct = 0;
       while (d.size < (1 << ct + 1) - 1 && d.parent != null) {
-        _collapse(d.parent);
-        d = d.parent;
+        _collapse(d.parent!);
+        d = d.parent!;
         ct++;
       }
       // if (d.size < (1 << ct + 1) - 1) ct--;
@@ -185,7 +185,7 @@ class QuaterNode<E extends Comparable<E>> {
   static final int capacity = 3;
   List<E> items;
   List<QuaterNode<E>> branches;
-  QuaterNode<E> parent;
+  QuaterNode<E>? parent;
 
   factory QuaterNode(List<E> elements) {
     if (elements.length > capacity) throw StateError('too many elements.');

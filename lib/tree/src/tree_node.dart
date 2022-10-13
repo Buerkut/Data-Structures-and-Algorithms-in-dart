@@ -1,13 +1,13 @@
 class TNode<E> {
   E value;
-  TNode<E> left, right, parent;
+  TNode<E>? left, right, parent;
 
   TNode(this.value);
 }
 
 class RBTNode<E extends Comparable<E>> {
   E value;
-  RBTNode<E> left, right, parent;
+  RBTNode<E>? left, right, parent;
   _RBTNodeColor _color;
 
   RBTNode(this.value) : _color = _RBTNodeColor.red;

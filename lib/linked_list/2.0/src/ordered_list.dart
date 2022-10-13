@@ -10,8 +10,8 @@ class OrderedList<E extends Comparable<E>> {
   E get last => _list.last;
   String get content => _list.content;
 
-  LinkedListEntry<E> get head => _list.head;
-  LinkedListEntry<E> get tail => _list.tail;
+  LinkedListEntry<E>? get head => _list.head;
+  LinkedListEntry<E>? get tail => _list.tail;
 
   bool get isEmpty => _list.isEmpty;
   bool get isNotEmpty => !isEmpty;
@@ -29,7 +29,7 @@ class OrderedList<E extends Comparable<E>> {
       _list.addFirst(value);
     } else {
       var inserted = LinkedListEntry(value);
-      p.prev.next = inserted;
+      p.prev!.next = inserted;
       inserted.prev = p.prev;
       inserted.next = p;
       p.prev = inserted;

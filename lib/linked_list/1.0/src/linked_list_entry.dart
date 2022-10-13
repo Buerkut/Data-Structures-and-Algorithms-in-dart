@@ -1,6 +1,6 @@
 class SingleLinkedListEntry<E> {
-  E _value;
-  SingleLinkedListEntry<E> next;
+  late E _value;
+  SingleLinkedListEntry<E>? next = null;
 
   SingleLinkedListEntry(this._value);
 
@@ -10,9 +10,9 @@ class SingleLinkedListEntry<E> {
 }
 
 class DoubleLinkedListEntry<E> {
-  E _value;
-  DoubleLinkedListEntry<E> prev;
-  DoubleLinkedListEntry<E> next;
+  late E _value;
+  DoubleLinkedListEntry<E>? prev = null;
+  DoubleLinkedListEntry<E>? next = null;
 
   DoubleLinkedListEntry(this._value);
 

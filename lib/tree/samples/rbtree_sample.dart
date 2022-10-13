@@ -13,7 +13,7 @@ void rbtreeTest<E extends Comparable<E>>(List<E> a) {
 
 void stress(int size) {
   var rd = Random();
-  var arr = List.generate(size, (_) => rd.nextDouble() * size);
+  var arr = List<num>.generate(size, (_) => rd.nextDouble() * size);
 
   var tree = RBTree.of(arr);
   var st = DateTime.now();
@@ -28,7 +28,7 @@ void stress(int size) {
   print('    linux implement cost:\t${ft.difference(st)}');
 }
 
-void traverse(RBTNode r, void func(RBTNode r)) {
+void traverse(RBTNode? r, void func(RBTNode r)) {
   if (r != null) {
     traverse(r.left, func);
     func(r);
@@ -37,13 +37,13 @@ void traverse(RBTNode r, void func(RBTNode r)) {
 }
 
 void check(RBTree tree) {
-  assert(tree.isEmpty || (!tree.isEmpty && tree.root.isBlack));
-  _walk(tree.root);
+  assert(tree.isEmpty || (!tree.isEmpty && tree.root!.isBlack));
+  _walk(tree.root!);
 }
 
-int _walk(RBTNode r) {
+int _walk(RBTNode? r) {
   if (r == null) return 0;
-  assert(r.isBlack || (r.isRed && r.parent.isBlack));
+  assert(r.isBlack || (r.isRed && r.parent!.isBlack));
   var lbh = _walk(r.left);
   var rbh = _walk(r.right);
   assert(lbh == rbh);

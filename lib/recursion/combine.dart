@@ -1,5 +1,5 @@
 void combine<E>(Set<E> s, int m) {
-  if (m > 0 && m <= s.length) _fill(List<E>(m), s, 0, m);
+  if (m > 0 && m <= s.length) _fill(List<E?>.filled(m, null), s, 0, m);
 }
 
 void combineAll<E>(Set<E> s) {

@@ -1,11 +1,11 @@
 class Stack<E> {
-  final List<E> _stack;
+  final List<E?> _stack;
   final int capacity;
   int _cursor;
 
   Stack(this.capacity)
       : _cursor = -1,
-        _stack = List(capacity);
+        _stack = List.filled(capacity, null);
 
   bool get isEmpty => _cursor == -1;
   bool get isNotEmpty => _cursor >= 0;
@@ -22,12 +22,12 @@ class Stack<E> {
   E pop() {
     if (isEmpty) throw StackEmptyException();
     _stack.removeAt(_cursor);
-    return _stack[_cursor--];
+    return _stack[_cursor--]!;
   }
 
   E get top {
     if (isEmpty) throw StackEmptyException();
-    return _stack[_cursor];
+    return _stack[_cursor]!;
   }
 }
 

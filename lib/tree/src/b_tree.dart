@@ -1,9 +1,9 @@
 class BTree<E extends Comparable<E>> {
   final int order;
-  BTreeNode<E> _root;
+  BTreeNode<E>? _root;
   int _elemCount;
 
-  factory BTree.of(Iterable<Comparable<E>> elements, int order) {
+  factory BTree.of(Iterable<E> elements, int order) {
     var tree = BTree<E>(order);
     for (var e in elements) tree.insert(e);
     return tree;
@@ -14,7 +14,7 @@ class BTree<E extends Comparable<E>> {
   }
 
   int get elemCount => _elemCount;
-  BTreeNode<E> get root => _root;
+  BTreeNode<E>? get root => _root;
 
   int get height {
     var h = 0, c = root;
@@ -29,7 +29,7 @@ class BTree<E extends Comparable<E>> {
 
   bool contains(E value) => find(value) != null;
 
-  BTreeNode<E> find(E value) {
+  BTreeNode<E>? find(E value) {
     var c = root;
     while (c != null) {
       var i = 0;
@@ -75,10 +75,10 @@ class BTree<E extends Comparable<E>> {
   }
 
   void traverse(void func(List<E> items)) {
-    if (!isEmpty) _traverse(_root, func);
+    if (!isEmpty) _traverse(_root!, func);
   }
 
-  void _fixAfterIns(BTreeNode<E> c) {
+  void _fixAfterIns(BTreeNode<E>? c) {
     while (c != null && _isOverflow(c)) {
       var t = _split(c);
       c = t.parent != null ? _absorb(t) : null;
@@ -98,8 +98,8 @@ class BTree<E extends Comparable<E>> {
     nc.parent = c.parent;
     if (c.parent != null) {
       var i = 0;
-      while (c.parent.branches[i] != c) i++;
-      c.parent.branches[i] = nc;
+      while (c.parent!.branches[i] != c) i++;
+      c.parent!.branches[i] = nc;
     } else {
       _root = nc;
     }
@@ -118,7 +118,7 @@ class BTree<E extends Comparable<E>> {
 
   BTreeNode<E> _absorb(BTreeNode<E> c) {
     var i = 0, p = c.parent;
-    while (p.branches[i] != c) i++;
+    while (p!.branches[i] != c) i++;
     p.items.insertAll(i, c.items);
     p.branches.replaceRange(i, i + 1, c.branches);
     c.branches.forEach((b) => b.parent = p);
@@ -133,32 +133,32 @@ class BTree<E extends Comparable<E>> {
   void _fixAfterDel(BTreeNode<E> d) {
     if (d.size >= (order / 2).ceil() - 1) return;
     if (d == root) {
-      if (root.items.isEmpty) {
-        if (root.isLeaf) {
+      if (root!.items.isEmpty) {
+        if (root!.isLeaf) {
           _root = null;
         } else {
-          _root = root.branches[0];
-          _root.parent = null;
+          _root = root!.branches[0];
+          _root!.parent = null;
         }
       }
     } else {
       var i = 0;
-      while (d.parent.branches[i] != d) i++;
+      while (d.parent!.branches[i] != d) i++;
       if (i > 0) {
-        if (_isRich(d.parent.branches[i - 1])) {
-          _rotateRight(d.parent, i);
-        } else if (i < d.parent.branches.length - 1 &&
-            _isRich(d.parent.branches[i + 1])) {
-          _rotateLeft(d.parent, i);
+        if (_isRich(d.parent!.branches[i - 1])) {
+          _rotateRight(d.parent!, i);
+        } else if (i < d.parent!.branches.length - 1 &&
+            _isRich(d.parent!.branches[i + 1])) {
+          _rotateLeft(d.parent!, i);
         } else {
           _mergeIntoLeft(d, i);
-          _fixAfterDel(d.parent);
+          _fixAfterDel(d.parent!);
         }
-      } else if (_isRich(d.parent.branches[i + 1])) {
-        _rotateLeft(d.parent, i);
+      } else if (_isRich(d.parent!.branches[i + 1])) {
+        _rotateLeft(d.parent!, i);
       } else {
-        _mergeIntoLeft(d.parent.branches[i + 1], i + 1);
-        _fixAfterDel(d.parent);
+        _mergeIntoLeft(d.parent!.branches[i + 1], i + 1);
+        _fixAfterDel(d.parent!);
       }
     }
   }
@@ -186,13 +186,13 @@ class BTree<E extends Comparable<E>> {
   }
 
   void _mergeIntoLeft(BTreeNode<E> c, int i) {
-    var leftSib = c.parent.branches[i - 1];
+    var leftSib = c.parent!.branches[i - 1];
     leftSib.items
-      ..add(c.parent.items.removeAt(i - 1))
+      ..add(c.parent!.items.removeAt(i - 1))
       ..addAll(c.items);
     leftSib.branches.addAll(c.branches);
     c.branches.forEach((b) => b.parent = leftSib);
-    c.parent.branches.removeAt(i);
+    c.parent!.branches.removeAt(i);
   }
 
   void _traverse(BTreeNode<E> r, void f(List<E> items)) {
@@ -205,7 +205,7 @@ class BTreeNode<E extends Comparable<E>> {
   static final int capacity = 2;
   List<E> items;
   List<BTreeNode<E>> branches;
-  BTreeNode<E> parent;
+  BTreeNode<E>? parent;
 
   BTreeNode(E value)
       : items = [],

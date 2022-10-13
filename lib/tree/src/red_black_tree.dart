@@ -3,12 +3,12 @@ import 'tree_exception.dart';
 import 'traverse_order.dart';
 
 class RBTree<E extends Comparable<E>> {
-  RBTNode<E> _root;
+  RBTNode<E>? _root;
   int _nodeNumbers;
 
   RBTree() : _nodeNumbers = 0;
 
-  factory RBTree.of(Iterable<Comparable<E>> elements) {
+  factory RBTree.of(Iterable<E> elements) {
     var tree = RBTree<E>();
     for (var e in elements) tree.insert(e);
     return tree;
@@ -16,7 +16,7 @@ class RBTree<E extends Comparable<E>> {
 
   bool get isEmpty => _root == null;
   int get nodeNumbers => _nodeNumbers;
-  RBTNode<E> get root => _root;
+  RBTNode<E>? get root => _root;
 
   void clear() {
     _root = null;
@@ -30,7 +30,7 @@ class RBTree<E extends Comparable<E>> {
   // the implement in Linux core.
   bool quickDelete(E value) => _delete(value, _fixAfterDelete2);
 
-  RBTNode<E> find(E value) {
+  RBTNode<E>? find(E value) {
     var current = _root;
     while (current != null) {
       var c = value.compareTo(current.value);
@@ -49,20 +49,20 @@ class RBTree<E extends Comparable<E>> {
   E get max {
     if (isEmpty) throw TreeEmptyException();
     var maxNode = _root;
-    while (maxNode.right != null) maxNode = maxNode.right;
+    while (maxNode!.right != null) maxNode = maxNode.right;
     return maxNode.value;
   }
 
   E get min {
     if (isEmpty) throw TreeEmptyException();
-    return _minNode(_root).value;
+    return _minNode(_root!).value;
   }
 
   void traverse(void f(E e), [TraverseOrder order = TraverseOrder.inOrder]) =>
       _traverse(_root, order, f);
 
   void _insert(RBTNode<E> inserted) {
-    RBTNode<E> p, c = _root;
+    RBTNode<E>? p, c = _root;
     while (c != null) {
       p = c;
       c = inserted.value.compareTo(c.value) <= 0 ? c.left : c.right;
@@ -82,8 +82,8 @@ class RBTree<E extends Comparable<E>> {
   void _fixAfterInsert(RBTNode<E> node) {
     while (_hasRedFather(node) && _hasRedUncle(node)) {
       var g = _gparent(node);
-      g.left.paintBlack();
-      g.right.paintBlack();
+      g.left!.paintBlack();
+      g.right!.paintBlack();
       g.paintRed();
       node = g;
     }
@@ -91,26 +91,26 @@ class RBTree<E extends Comparable<E>> {
     if (_hasRedFather(node)) {
       var g = _gparent(node);
       if (node.parent == g.left) {
-        if (node == node.parent.right) {
-          _rotateLeft(node.parent);
-          node = node.left;
+        if (node == node.parent!.right) {
+          _rotateLeft(node.parent!);
+          node = node.left!;
         }
         _rotateRight(g);
       } else {
-        if (node == node.parent.left) {
-          _rotateRight(node.parent);
-          node = node.right;
+        if (node == node.parent!.left) {
+          _rotateRight(node.parent!);
+          node = node.right!;
         }
         _rotateLeft(g);
       }
-      node.parent.paintBlack();
+      node.parent!.paintBlack();
       g.paintRed();
     }
-    _root.paintBlack();
+    _root!.paintBlack();
   }
 
   bool _hasRedFather(RBTNode<E> node) =>
-      node.parent != null && node.parent.isRed;
+      node.parent != null && node.parent!.isRed;
 
   bool _hasRedUncle(RBTNode<E> node) {
     var gparent = _gparent(node);
@@ -118,7 +118,7 @@ class RBTree<E extends Comparable<E>> {
     return uncle != null && uncle.isRed;
   }
 
-  RBTNode _gparent(RBTNode<E> node) => node.parent.parent;
+  RBTNode<E> _gparent(RBTNode<E> node) => node.parent!.parent!;
 
   bool _delete(E value, void _fix(RBTNode<E> p, bool isLeft)) {
     var d = find(value);
@@ -133,34 +133,34 @@ class RBTree<E extends Comparable<E>> {
     rp?.parent = d.parent;
     if (d.parent == null)
       _root = rp;
-    else if (d == d.parent.left)
-      d.parent.left = rp;
+    else if (d == d.parent!.left)
+      d.parent!.left = rp;
     else
-      d.parent.right = rp;
+      d.parent!.right = rp;
 
     if (rp != null)
       rp.paintBlack();
     else if (d.isBlack && d.parent != null)
-      _fix(d.parent, d.parent.left == null);
+      _fix(d.parent!, d.parent!.left == null);
 
     _nodeNumbers--;
     return true;
   }
 
   RBTNode<E> _successor(RBTNode<E> d) =>
-      d.right != null ? _minNode(d.right) : d.left;
+      d.right != null ? _minNode(d.right!) : d.left!;
 
   void _fixAfterDelete(RBTNode<E> p, bool isLeft) {
     var c = isLeft ? p.right : p.left;
     if (isLeft) {
-      if (c.isRed) {
+      if (c!.isRed) {
         p.paintRed();
         c.paintBlack();
         _rotateLeft(p);
         c = p.right;
       }
-      if (c.left != null && c.left.isRed) {
-        c.left.paint(p.color);
+      if (c!.left != null && c.left!.isRed) {
+        c.left!.paint(p.color);
         if (p.isRed) p.paintBlack();
         _rotateRight(c);
         _rotateLeft(p);
@@ -168,18 +168,18 @@ class RBTree<E extends Comparable<E>> {
         _rotateLeft(p);
         if (p.isBlack) {
           p.paintRed();
-          if (c.parent != null) _fixAfterDelete(c.parent, c == c.parent.left);
+          if (c.parent != null) _fixAfterDelete(c.parent!, c == c.parent!.left);
         }
       }
     } else {
-      if (c.isRed) {
+      if (c!.isRed) {
         p.paintRed();
         c.paintBlack();
         _rotateRight(p);
         c = p.left;
       }
-      if (c.right != null && c.right.isRed) {
-        c.right.paint(p.color);
+      if (c!.right != null && c.right!.isRed) {
+        c.right!.paint(p.color);
         if (p.isRed) p.paintBlack();
         _rotateLeft(c);
         _rotateRight(p);
@@ -187,7 +187,7 @@ class RBTree<E extends Comparable<E>> {
         _rotateRight(p);
         if (p.isBlack) {
           p.paintRed();
-          if (c.parent != null) _fixAfterDelete(c.parent, c == c.parent.left);
+          if (c.parent != null) _fixAfterDelete(c.parent!, c == c.parent!.left);
         }
       }
     }
@@ -197,59 +197,59 @@ class RBTree<E extends Comparable<E>> {
   void _fixAfterDelete2(RBTNode<E> p, bool isLeft) {
     var c = isLeft ? p.right : p.left;
     if (isLeft) {
-      if (c.isRed) {
+      if (c!.isRed) {
         p.paintRed();
         c.paintBlack();
         _rotateLeft(p);
         c = p.right;
       }
-      if ((c.left != null && c.left.isRed) ||
-          (c.right != null && c.right.isRed)) {
-        if (c.right == null || c.right.isBlack) {
+      if ((c!.left != null && c.left!.isRed) ||
+          (c.right != null && c.right!.isRed)) {
+        if (c.right == null || c.right!.isBlack) {
           _rotateRight(c);
           c = p.right;
         }
-        c.paint(p.color);
+        c!.paint(p.color);
         p.paintBlack();
-        c.right.paintBlack();
+        c.right!.paintBlack();
         _rotateLeft(p);
       } else {
         c.paintRed();
         if (p.isRed)
           p.paintBlack();
         else if (p.parent != null)
-          _fixAfterDelete2(p.parent, p == p.parent.left);
+          _fixAfterDelete2(p.parent!, p == p.parent!.left);
       }
     } else {
-      if (c.isRed) {
+      if (c!.isRed) {
         p.paintRed();
         c.paintBlack();
         _rotateRight(p);
         c = p.left;
       }
-      if ((c.left != null && c.left.isRed) ||
-          (c.right != null && c.right.isRed)) {
-        if (c.left == null || c.left.isBlack) {
+      if ((c!.left != null && c.left!.isRed) ||
+          (c.right != null && c.right!.isRed)) {
+        if (c.left == null || c.left!.isBlack) {
           _rotateLeft(c);
           c = p.left;
         }
-        c.paint(p.color);
+        c!.paint(p.color);
         p.paintBlack();
-        c.left.paintBlack();
+        c.left!.paintBlack();
         _rotateRight(p);
       } else {
         c.paintRed();
         if (p.isRed)
           p.paintBlack();
         else if (p.parent != null)
-          _fixAfterDelete2(p.parent, p == p.parent.left);
+          _fixAfterDelete2(p.parent!, p == p.parent!.left);
       }
     }
   }
 
   void _rotateLeft(RBTNode<E> node) {
     var r = node.right, p = node.parent;
-    r.parent = p;
+    r!.parent = p;
     if (p == null)
       _root = r;
     else if (p.left == node)
@@ -265,7 +265,7 @@ class RBTree<E extends Comparable<E>> {
 
   void _rotateRight(RBTNode<E> node) {
     var l = node.left, p = node.parent;
-    l.parent = p;
+    l!.parent = p;
     if (p == null)
       _root = l;
     else if (p.left == node)
@@ -279,9 +279,9 @@ class RBTree<E extends Comparable<E>> {
     node.parent = l;
   }
 
-  RBTNode<E> _minNode(RBTNode<E> r) => r.left == null ? r : _minNode(r.left);
+  RBTNode<E> _minNode(RBTNode<E> r) => r.left == null ? r : _minNode(r.left!);
 
-  void _traverse(RBTNode<E> s, TraverseOrder order, void f(E e)) {
+  void _traverse(RBTNode<E>? s, TraverseOrder order, void f(E e)) {
     if (s == null) return;
     switch (order) {
       case TraverseOrder.inOrder:

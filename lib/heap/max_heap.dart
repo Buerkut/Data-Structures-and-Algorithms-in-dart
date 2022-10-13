@@ -1,8 +1,8 @@
 class MaxHeap<E extends Comparable<E>> {
-  List<E> _heap;
-  int _size;
+  late List<E> _heap;
+  late int _size;
 
-  MaxHeap([Iterable<Comparable<E>> elements]) {
+  MaxHeap([Iterable<E>? elements]) {
     elements ??= <E>[];
     _heap = elements.toList();
     _size = elements.length;
@@ -13,9 +13,9 @@ class MaxHeap<E extends Comparable<E>> {
 
   int get size => _size;
 
-  E get top => _size == 0 ? null : _heap[0];
+  E? get top => _size == 0 ? null : _heap[0];
 
-  E popTop() => _size == 0 ? null : pop(1).first;
+  E? popTop() => _size == 0 ? null : pop(1).first;
 
   Iterable<E> pop(int n) sync* {
     if (n > _size) n = _size;
@@ -32,7 +32,7 @@ class MaxHeap<E extends Comparable<E>> {
     _bubble(_size++);
   }
 
-  E remove(int i) {
+  Comparable<E> remove(int i) {
     if (i < 0 || i > _size - 1) throw StateError('out of range!');
     var e = _heap[i];
     _swap(i, --_size);

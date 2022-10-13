@@ -3,12 +3,12 @@ import 'tree_node.dart' show TNode;
 import 'tree_exception.dart';
 
 class BinaryTree<E extends Comparable<E>> {
-  TNode<E> _root;
+  TNode<E>? _root;
   int _nodeNumbers;
 
   BinaryTree() : _nodeNumbers = 0;
 
-  factory BinaryTree.fromIterables(Iterable<Comparable<E>> elements) {
+  factory BinaryTree.fromIterables(Iterable<E> elements) {
     var tree = BinaryTree<E>();
     for (var e in elements) tree.insert(e);
     return tree;
@@ -32,7 +32,7 @@ class BinaryTree<E extends Comparable<E>> {
     return true;
   }
 
-  TNode<E> find(E value) {
+  TNode<E>? find(E value) {
     var current = _root;
     while (current != null) {
       var c = value.compareTo(current.value);
@@ -43,7 +43,7 @@ class BinaryTree<E extends Comparable<E>> {
   }
 
   void insert(E value) {
-    TNode<E> p, c = _root;
+    TNode<E>? p, c = _root;
     while (c != null) {
       p = c;
       c = value.compareTo(c.value) <= 0 ? c.left : c.right;
@@ -62,14 +62,14 @@ class BinaryTree<E extends Comparable<E>> {
     _nodeNumbers++;
   }
 
-  void traverse(void func(E value), [TraverseOrder order]) {
+  void traverse(void func(E value), [TraverseOrder? order]) {
     _traverse(_root, order, func);
   }
 
   E get max {
     if (isEmpty) throw TreeEmptyException();
     var maxNode = _root;
-    while (maxNode.right != null) maxNode = maxNode.right;
+    while (maxNode!.right != null) maxNode = maxNode.right;
     return maxNode.value;
   }
 
@@ -78,8 +78,8 @@ class BinaryTree<E extends Comparable<E>> {
     return _minNode(_root).value;
   }
 
-  TNode<E> _minNode(TNode<E> r) {
-    while (r.left != null) r = r.left;
+  TNode<E> _minNode(TNode<E>? r) {
+    while (r!.left != null) r = r.left;
     return r;
   }
 
@@ -90,12 +90,12 @@ class BinaryTree<E extends Comparable<E>> {
     _replace(deleted, successor);
   }
 
-  static void _replace<E>(TNode<E> deleted, TNode<E> successor) {
+  static void _replace<E>(TNode<E> deleted, TNode<E>? successor) {
     if (deleted.parent != null) {
-      if (deleted.parent.left == deleted)
-        deleted.parent.left = successor;
+      if (deleted.parent!.left == deleted)
+        deleted.parent!.left = successor;
       else
-        deleted.parent.right = successor;
+        deleted.parent!.right = successor;
     }
 
     if (successor != null) {
@@ -107,10 +107,11 @@ class BinaryTree<E extends Comparable<E>> {
     }
   }
 
-  TNode<E> _successor(TNode<E> node) =>
+  TNode<E>? _successor(TNode<E> node) =>
       node.right != null ? _minNode(node.right) : node.left;
 
-  static void _traverse<E>(TNode<E> root, TraverseOrder order, void func(E e)) {
+  static void _traverse<E>(
+      TNode<E>? root, TraverseOrder? order, void func(E e)) {
     if (root == null) return;
     switch (order) {
       case TraverseOrder.preOrder:

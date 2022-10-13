@@ -5,7 +5,7 @@ void test() {
   var len = 1000000, rd = Random();
   for (var i = 0; i < 1024; i++) {
     for (var order = 4; order <= 1024; order++) {
-      var a = List.generate(len, (_) => rd.nextInt(len << 4));
+      var a = List<num>.generate(len, (_) => rd.nextInt(len << 4));
       var tree = BPlusTree.of(a, a, order);
       // print(a);
       print('a.length: ${a.length}, tree.elemCount: ${tree.elemCount}');

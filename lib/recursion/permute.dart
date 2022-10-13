@@ -3,7 +3,7 @@ void permute<E>(Set<E> s, int m) {
 
   _fill(<E>[], s, m);
   print('-------------------');
-  _fillFixed(List<E>(m), s, 0, m);
+  _fillFixed(List<E?>.filled(m, null), s, 0, m);
 }
 
 void permuteAll(List a, int k) {

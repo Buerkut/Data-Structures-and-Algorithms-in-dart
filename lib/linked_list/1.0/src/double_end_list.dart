@@ -1,11 +1,11 @@
 import 'linked_list_entry.dart' show SingleLinkedListEntry;
 
 class DoubleEndList<E> {
-  SingleLinkedListEntry<E> _head;
-  SingleLinkedListEntry<E> _tail;
+  SingleLinkedListEntry<E>? _head = null;
+  SingleLinkedListEntry<E>? _tail = null;
 
-  SingleLinkedListEntry<E> get head => _head;
-  SingleLinkedListEntry<E> get tail => _tail;
+  SingleLinkedListEntry<E>? get head => _head;
+  SingleLinkedListEntry<E>? get tail => _tail;
   bool get isEmpty => _head == null;
   bool get isNotEmpty => _head != null;
 
@@ -49,13 +49,13 @@ class DoubleEndList<E> {
     if (isEmpty) {
       _head = entry;
     } else {
-      _tail.next = entry;
+      _tail!.next = entry;
     }
     _tail = entry;
   }
 
   bool remove(E value) {
-    SingleLinkedListEntry<E> prev, curr = _head;
+    SingleLinkedListEntry<E>? prev, curr = _head;
     while (curr != null && curr.value != value) {
       prev = curr;
       curr = curr.next;
@@ -63,9 +63,9 @@ class DoubleEndList<E> {
 
     if (curr == null) return false;
     if (curr == _head) {
-      _head = _head.next;
+      _head = _head!.next;
     } else {
-      prev.next = curr.next;
+      prev!.next = curr.next;
     }
     if (curr == _tail) {
       _tail = prev;
@@ -75,17 +75,17 @@ class DoubleEndList<E> {
     return true;
   }
 
-  E removeFirst() {
+  E? removeFirst() {
     if (isEmpty) return null;
 
     var first = _head;
     if (_head == _tail) _tail = null;
-    _head = _head.next;
-    first.next = null;
+    _head = _head!.next;
+    first!.next = null;
     return first.value;
   }
 
-  SingleLinkedListEntry<E> _search(E value) {
+  SingleLinkedListEntry<E>? _search(E value) {
     var node = _head;
     while (node != null && node.value != value) node = node.next;
     return node;
@@ -103,13 +103,13 @@ class DoubleEndList<E> {
     if (isEmpty || _head == _tail) return;
 
     _tail = _head;
-    SingleLinkedListEntry<E> reversed;
-    while (_head.next != null) {
-      var t = _head.next;
-      _head.next = reversed;
+    SingleLinkedListEntry<E>? reversed = null;
+    while (_head!.next != null) {
+      var t = _head!.next;
+      _head!.next = reversed;
       reversed = _head;
       _head = t;
     }
-    _head.next = reversed;
+    _head!.next = reversed;
   }
 }

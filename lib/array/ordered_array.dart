@@ -1,11 +1,11 @@
 /// based on fixed-length list.
 
 class OrderedArray<E extends Comparable> {
-  final List<E> _array;
+  final List<E?> _array;
   int _nElements;
 
   OrderedArray(int length)
-      : _array = List<E>(length),
+      : _array = List.filled(length, null),
         _nElements = 0;
 
   String get content {
@@ -38,9 +38,9 @@ class OrderedArray<E extends Comparable> {
     int lower = 0, upper = _nElements - 1, mid;
     while (lower <= upper) {
       mid = (lower + upper) ~/ 2;
-      if (_array[mid].compareTo(value) == 0) {
+      if (_array[mid]?.compareTo(value) == 0) {
         return mid;
-      } else if (_array[mid].compareTo(value) > 0) {
+      } else if ((_array[mid]?.compareTo(value))! > 0) {
         upper = mid - 1;
       } else {
         lower = mid + 1;
@@ -53,13 +53,13 @@ class OrderedArray<E extends Comparable> {
     if (_nElements == _array.length) throw ArrayFullException();
 
     int i = 0;
-    while (i < _nElements && _array[i].compareTo(value) < 0) i++;
+    while (i < _nElements && (_array[i]?.compareTo(value))! < 0) i++;
     for (var j = _nElements; j > i; j--) _array[j] = _array[j - 1];
     _array[i] = value;
     _nElements++;
   }
 
-  E operator [](int index) {
+  E? operator [](int index) {
     if (index < 0 || index > length - 1) throw RangeError('out of range');
     return _array[index];
   }

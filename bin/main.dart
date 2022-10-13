@@ -21,7 +21,7 @@ void main() {
 
   print('---------------------------------');
   print('Visits by dfs: ');
-  g.dfs((v) => stdout.write('${v.label} '));
+  g.dfs((v) => stdout.write('${v!.label} '));
   print('\n---------------------------------');
   print('Visits by bfs: ');
   g.bfs((v) => stdout.write('${v.label} '));

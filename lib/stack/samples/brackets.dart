@@ -3,7 +3,7 @@ import '../src/low_level_stack.dart';
 
 void run() {
   var ins = stdin.readLineSync();
-  while (ins != 'exit') {
+  while (ins != 'exit' && ins != null) {
     print(check(ins));
     ins = stdin.readLineSync();
   }

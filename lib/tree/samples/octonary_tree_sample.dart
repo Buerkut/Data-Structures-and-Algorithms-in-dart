@@ -25,7 +25,7 @@ void octonaryTest<E extends Comparable<E>>(List<E> a) {
 }
 
 bool check(OctonaryTree tree) {
-  if (!tree.isEmpty) assert(tree.height == _walk(tree.root));
+  if (!tree.isEmpty) assert(tree.height == _walk(tree.root!));
   return true;
 }
 

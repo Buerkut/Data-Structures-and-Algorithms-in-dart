@@ -11,7 +11,12 @@ class LinkedList<E> extends LinkedListBase<E> implements Iterable<E> {
     return list;
   }
 
-  Iterator<E> get iterator => _LinkedListIterator(this);
+  Iterator<E> get iterator {
+    if (isEmpty) throw ListError.noElement();
+
+    return _LinkedListIterator(this);
+  }
+
   int get length => _length;
 
   Iterable<E> get reversed sync* {
@@ -21,7 +26,7 @@ class LinkedList<E> extends LinkedListBase<E> implements Iterable<E> {
   E get single {
     if (isEmpty) throw LinkedListEmptyException();
     if (head != tail) throw StateError('too many elements!');
-    return head.value;
+    return head!.value;
   }
 
   void add(E value) => addLast(value);
@@ -47,6 +52,8 @@ class LinkedList<E> extends LinkedListBase<E> implements Iterable<E> {
 
   LinkedList<E> copy() => LinkedList<E>.of(this);
 
+  // bool contains(Object? value) => search(value) != null;
+
   bool insertAfter(E given, E value) {
     if (super.insertAfter(given, value)) {
       _length++;
@@ -64,15 +71,21 @@ class LinkedList<E> extends LinkedListBase<E> implements Iterable<E> {
   }
 
   bool remove(E value) {
-    var removed = search(value);
+    var removed = search(value as Object);
     if (removed == null) return false;
     _remove(removed);
     return true;
   }
 
-  E removeFirst() => _remove(head);
+  E removeFirst() {
+    if (isEmpty) throw LinkedListEmptyException();
+    return _remove(head!);
+  }
 
-  E removeLast() => _remove(tail);
+  E removeLast() {
+    if (isEmpty) throw LinkedListEmptyException();
+    return _remove(tail!);
+  }
 
   void removeWhere(bool test(E element)) {
     var ptr = head;
@@ -90,18 +103,18 @@ class LinkedList<E> extends LinkedListBase<E> implements Iterable<E> {
   void retainWhere(bool test(E element)) => removeWhere((e) => !test(e));
 
   void sort(int compare(E a, E b)) {
-    if (length > 1) _sort(compare, head, tail);
+    if (length > 1) _sort(compare, head!, tail!);
   }
 
-  LinkedList<E> sublist(int start, [int end]) {
+  LinkedList<E> sublist(int start, [int? end]) {
     if (start < 0) throw RangeError('out of range.');
     end ??= length;
     if (start > end || end > length) throw RangeError('out of range.');
     var i = 0, ptr = head, list = LinkedList<E>();
-    while (i++ < start) ptr = ptr.next;
+    while (i++ < start) ptr = ptr!.next;
     i--;
     while (i++ < end) {
-      list.add(ptr.value);
+      list.add(ptr!.value);
       ptr = ptr.next;
     }
     return list;
@@ -127,8 +140,8 @@ class LinkedList<E> extends LinkedListBase<E> implements Iterable<E> {
   E elementAt(int index) {
     if (index < 0 || index > length - 1) throw RangeError('out of range.');
     var count = 0, ptr = head;
-    while (count++ < index) ptr = ptr.next;
-    return ptr.value;
+    while (count++ < index) ptr = ptr!.next;
+    return ptr!.value;
   }
 
   bool every(bool test(E element)) {
@@ -142,21 +155,21 @@ class LinkedList<E> extends LinkedListBase<E> implements Iterable<E> {
     for (var e in this) yield* func(e);
   }
 
-  E firstWhere(bool test(E element), {E orElse()}) {
-    for (var e in this) {
-      if (test(e)) return e;
-    }
-    if (orElse != null) return orElse();
-    return null;
-  }
+  // E firstWhere(bool test(E element), {E orElse()}) {
+  //   for (var e in this) {
+  //     if (test(e)) return e;
+  //   }
+  //   if (orElse != null) return orElse();
+  //   return null;
+  // }
 
-  E lastWhere(bool test(E element), {E orElse()}) {
-    for (var right = tail; right != null; right = right.prev) {
-      if (test(right.value)) return right.value;
-    }
-    if (orElse != null) return orElse();
-    return null;
-  }
+  // E lastWhere(bool test(E element), {E orElse()}) {
+  //   for (var right = tail; right != null; right = right.prev) {
+  //     if (test(right.value)) return right.value;
+  //   }
+  //   if (orElse != null) return orElse();
+  //   return null;
+  // }
 
   T fold<T>(T initialValue, T combine(T previousValue, E element)) {
     var value = initialValue;
@@ -174,10 +187,13 @@ class LinkedList<E> extends LinkedListBase<E> implements Iterable<E> {
     if (!iter.moveNext()) return '';
     var sb = StringBuffer();
     sb.write(iter.current);
-    if (separator == null || separator == '') {
+    if (separator == '') {
       while (iter.moveNext()) sb.write(iter.current);
     } else {
-      while (iter.moveNext()) sb..write(separator)..write(iter.current);
+      while (iter.moveNext())
+        sb
+          ..write(separator)
+          ..write(iter.current);
     }
     return sb.toString();
   }
@@ -194,8 +210,24 @@ class LinkedList<E> extends LinkedListBase<E> implements Iterable<E> {
     return result;
   }
 
-  E singleWhere(bool test(E element), {E orElse()}) {
-    E result;
+  E firstWhere(bool test(E element), {E orElse()?}) {
+    for (var e in this) {
+      if (test(e)) return e;
+    }
+    if (orElse != null) return orElse();
+    throw ListError.noElement();
+  }
+
+  E lastWhere(bool test(E element), {E orElse()?}) {
+    for (var right = tail; right != null; right = right.prev) {
+      if (test(right.value)) return right.value;
+    }
+    if (orElse != null) return orElse();
+    throw ListError.noElement();
+  }
+
+  E singleWhere(bool test(E element), {E orElse()?}) {
+    late E result;
     var found = false;
     for (var e in this) {
       if (test(e)) {
@@ -206,7 +238,7 @@ class LinkedList<E> extends LinkedListBase<E> implements Iterable<E> {
     }
     if (found) return result;
     if (orElse != null) return orElse();
-    return null;
+    throw ListError.noElement();
   }
 
   Iterable<E> skip(int count) sync* {
@@ -258,12 +290,12 @@ class LinkedList<E> extends LinkedListBase<E> implements Iterable<E> {
   void operator []=(int index, E value) {
     if (index < 0 || index > length - 1) throw RangeError('out of range.');
     var count = 0, ptr = head;
-    while (count++ < index) ptr = ptr.next;
-    ptr.value = value;
+    while (count++ < index) ptr = ptr!.next;
+    ptr!.value = value;
   }
 
   E _remove(LinkedListEntry<E> removed) {
-    if (removed == null) return null;
+    // if (removed == null) return null;
     if (removed == head) {
       super.removeFirst();
     } else if (removed == tail) {
@@ -283,36 +315,35 @@ class LinkedList<E> extends LinkedListBase<E> implements Iterable<E> {
     return removed.value;
   }
 
-  void _sort(
-      int compare(E a, E b), LinkedListEntry<E> start, LinkedListEntry<E> end) {
-    var lp = start, rp = end, key = lp.value;
+  void _sort(int compare(E a, E b), LinkedListEntry<E>? start,
+      LinkedListEntry<E>? end) {
+    var lp = start, rp = end, key = lp!.value;
     while (lp != rp) {
-      while (compare(rp.value, key) >= 0 && rp != lp) rp = rp.prev;
+      while (compare(rp!.value, key) >= 0 && rp != lp) rp = rp.prev;
       if (rp != lp) {
-        lp.value = rp.value;
+        lp!.value = rp.value;
         lp = lp.next;
       }
-      while (compare(lp.value, key) <= 0 && lp != rp) lp = lp.next;
+      while (compare(lp!.value, key) <= 0 && lp != rp) lp = lp.next;
       if (lp != rp) {
         rp.value = lp.value;
         rp = rp.prev;
       }
     }
-    if (lp.value != key) lp.value = key;
+    if (lp!.value != key) lp.value = key;
 
     if (lp != start) _sort(compare, start, lp.prev);
-    if (rp != end) _sort(compare, rp.next, end);
+    if (rp != end) _sort(compare, rp!.next, end);
   }
 }
 
 class _LinkedListIterator<E> implements Iterator<E> {
-  LinkedListEntry<E> _iter;
-  E _current;
+  late LinkedListEntry<E> _iter;
+  late E _current;
   bool _moved;
 
-  _LinkedListIterator(LinkedList<E> list)
-      : _iter = LinkedListEntry<E>(null),
-        _moved = false {
+  _LinkedListIterator(LinkedList<E> list) : _moved = false {
+    _iter = LinkedListEntry<E>(list.head!.value);
     _iter.next = list.head;
   }
 
@@ -324,11 +355,9 @@ class _LinkedListIterator<E> implements Iterator<E> {
   bool moveNext() {
     if (!_moved) _moved = true;
 
-    if (_iter.next == null) {
-      _current = null;
-      return false;
-    }
-    _iter = _iter.next;
+    if (_iter.next == null) throw ListError.noElement();
+
+    _iter = _iter.next!;
     _current = _iter.value;
     return true;
   }

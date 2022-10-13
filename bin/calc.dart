@@ -4,7 +4,7 @@ import 'package:data_struct/stack/samples/calculator2.dart' as calc2;
 
 void main() {
   var exp = stdin.readLineSync();
-  while (exp != 'exit') {
+  while (exp != 'exit' && exp != null) {
     try {
       var r1 = calc1.calc(exp);
       var r2 = calc2.calc(exp);

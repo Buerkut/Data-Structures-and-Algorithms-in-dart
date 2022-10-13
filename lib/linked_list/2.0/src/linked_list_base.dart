@@ -1,39 +1,40 @@
 // double linked and double end list.
 abstract class LinkedListBase<E> {
-  LinkedListEntry<E> _head, _tail;
+  LinkedListEntry<E>? _head = null;
+  LinkedListEntry<E>? _tail = null;
 
-  LinkedListEntry<E> get head => _head;
-  LinkedListEntry<E> get tail => _tail;
+  LinkedListEntry<E>? get head => _head;
+  LinkedListEntry<E>? get tail => _tail;
   bool get isEmpty => head == null;
   bool get isNotEmpty => !isEmpty;
 
   E get first {
     if (isEmpty) throw LinkedListEmptyException();
-    return head.value;
+    return head!.value;
   }
 
   E get last {
     if (isEmpty) throw LinkedListEmptyException();
-    return tail.value;
+    return tail!.value;
   }
 
   String get content {
     var sb = StringBuffer();
     sb.write('[');
     if (isNotEmpty) {
-      for (var node = head; node != tail; node = node.next) {
-        sb.write('${node.value}, ');
+      for (var node = head; node != tail; node = node!.next) {
+        sb.write('${node!.value}, ');
       }
-      sb.write(tail.value);
+      sb.write(tail!.value);
     }
     sb.write(']');
     return sb.toString();
   }
 
-  bool contains(Object value) => search(value) != null;
+  bool contains(Object? value) => search(value) != null;
 
   void forEach(void func(E value)) {
-    for (var node = head; node != null; node = node.next) func(node.value);
+    for (var node = head; node != null; node = node.next) func(node.value!);
   }
 
   void clear() {
@@ -56,7 +57,7 @@ abstract class LinkedListBase<E> {
   }
 
   bool insertAfter(E given, E value) {
-    var node = search(given);
+    var node = search(given as Object);
     if (node == null) return false;
 
     var inserted = LinkedListEntry(value);
@@ -66,7 +67,7 @@ abstract class LinkedListBase<E> {
   }
 
   bool insertBefore(E given, E value) {
-    var node = search(given);
+    var node = search(given as Object);
     if (node == null) return false;
 
     var inserted = LinkedListEntry(value);
@@ -76,11 +77,11 @@ abstract class LinkedListBase<E> {
   }
 
   bool remove(E value) {
-    var removed = search(value);
+    var removed = search(value as Object);
     if (removed == null) return false;
 
-    if (removed == head) _head = head.next;
-    if (removed == tail) _tail = tail.prev;
+    if (removed == head) _head = head!.next;
+    if (removed == tail) _tail = tail!.prev;
     _unlink(removed);
     return true;
   }
@@ -88,20 +89,20 @@ abstract class LinkedListBase<E> {
   E removeFirst() {
     if (isEmpty) throw LinkedListEmptyException();
     var node = head;
-    _head = head.next;
+    _head = head!.next;
     if (isEmpty) _tail = null;
-    return _unlink(node);
+    return _unlink(node!);
   }
 
   E removeLast() {
     if (isEmpty) throw LinkedListEmptyException();
     var node = tail;
-    _tail = tail.prev;
+    _tail = tail!.prev;
     if (tail == null) _head = null;
-    return _unlink(node);
+    return _unlink(node!);
   }
 
-  LinkedListEntry<E> search(E value) {
+  LinkedListEntry<E>? search(Object? value) {
     var node = head;
     while (node != null && node.value != value) node = node.next;
     return node;
@@ -109,7 +110,7 @@ abstract class LinkedListBase<E> {
 
   String toString() => content;
 
-  void _link(LinkedListEntry<E> prev, LinkedListEntry<E> next,
+  void _link(LinkedListEntry<E>? prev, LinkedListEntry<E>? next,
       LinkedListEntry<E> entry) {
     if (prev != null) {
       prev.next = entry;
@@ -122,7 +123,7 @@ abstract class LinkedListBase<E> {
   }
 
   E _unlink(LinkedListEntry<E> removed) {
-    if (removed == null) return null;
+    // if (removed == null) return null;
     var prev = removed.prev, next = removed.next;
     if (prev != null) {
       prev.next = next;
@@ -132,7 +133,7 @@ abstract class LinkedListBase<E> {
       next.prev = prev;
       removed.next = null;
     }
-    return removed.value;
+    return removed.value!;
   }
 }
 
@@ -141,8 +142,8 @@ class LinkedListEntry<E> {
   E value;
   // LinkedListEntry<E> _prev;
   // LinkedListEntry<E> _next;
-  LinkedListEntry<E> prev;
-  LinkedListEntry<E> next;
+  LinkedListEntry<E>? prev = null;
+  LinkedListEntry<E>? next = null;
 
   LinkedListEntry(this.value);
 
@@ -154,4 +155,17 @@ class LinkedListEntry<E> {
 class LinkedListEmptyException implements Exception {
   const LinkedListEmptyException();
   String toString() => 'LinkedListEmptyException';
+}
+
+/**
+ * Creates errors throw by [List] when the element count is wrong.
+ * Copied from dart-sdk.
+ */
+abstract class ListError {
+  /** Error thrown thrown by, e.g., [List.first] when there is no result. */
+  static StateError noElement() => StateError("No element");
+  /** Error thrown by, e.g., [List.single] if there are too many results. */
+  static StateError tooMany() => StateError("Too many elements");
+  /** Error thrown by, e.g., [List.setRange] if there are too few elements. */
+  static StateError tooFew() => StateError("Too few elements");
 }

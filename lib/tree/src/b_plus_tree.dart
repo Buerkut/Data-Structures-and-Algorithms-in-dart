@@ -1,10 +1,9 @@
 class BPlusTree<K extends Comparable<K>, V> {
   final int order, _half;
-  BPNode<K> _root, data;
+  BPNode<K>? _root, data;
   int _elemCount;
 
-  factory BPlusTree.of(
-      Iterable<Comparable<K>> keys, Iterable<V> values, int order) {
+  factory BPlusTree.of(Iterable<K> keys, Iterable<V> values, int order) {
     if (keys.length != values.length)
       throw StateError('number of keys does not equal to the number of values');
     var bpTree = BPlusTree<K, V>(order);
@@ -19,7 +18,7 @@ class BPlusTree<K extends Comparable<K>, V> {
     if (order < 4) throw StateError('order needs >= 4!');
   }
 
-  BPNode<K> get root => _root;
+  BPNode<K>? get root => _root;
   int get elemCount => _elemCount;
   bool get isEmpty => root == null;
 
@@ -34,7 +33,7 @@ class BPlusTree<K extends Comparable<K>, V> {
 
   bool contains(K key) => find(key) != null;
 
-  Map<int, BPLeaf<K, V>> find(K key) {
+  Map<int, BPLeaf<K, V>>? find(K key) {
     var c = root, i = 0;
     while (c != null) {
       while (i < c.size && c._keys[i].compareTo(key) <= 0) i++;
@@ -70,7 +69,7 @@ class BPlusTree<K extends Comparable<K>, V> {
     _elemCount++;
   }
 
-  Map<K, V> delete(K key) {
+  Map<K, V>? delete(K key) {
     var map = find(key);
     if (map == null) return null;
     var i = map.keys.first, d = map.values.first;
@@ -96,7 +95,7 @@ class BPlusTree<K extends Comparable<K>, V> {
     while (c.size > order) {
       if (c._parent != null) {
         var j = 0, p = c._parent;
-        while (p._branches[j] != c) j++;
+        while (p!._branches[j] != c) j++;
         if (j > 0 && _isNotFull(p._branches[j - 1])) {
           _rotateLeft(p, j);
           break;
@@ -107,15 +106,15 @@ class BPlusTree<K extends Comparable<K>, V> {
       }
 
       _split(c);
-      c = c._parent;
+      c = c._parent!;
     }
   }
 
   void _updateParentBoundKey(BPNode<K> c, int i) {
     while (i == 0 && c._parent != null) {
-      while (c._parent._branches[i] != c) i++;
-      c._parent._keys[i] = c._keys[0];
-      c = c._parent;
+      while (c._parent!._branches[i] != c) i++;
+      c._parent!._keys[i] = c._keys[0];
+      c = c._parent!;
     }
   }
 
@@ -148,8 +147,8 @@ class BPlusTree<K extends Comparable<K>, V> {
     if (c.isLeaf) {
       novNode = BPLeaf._internal(c._keys.getRange(_half, c.size),
           (c as BPLeaf<K, V>)._values.getRange(_half, c.size));
-      (c as BPLeaf<K, V>)._values.removeRange(_half, c.size);
-      (c as BPLeaf<K, V>)._link(novNode);
+      c._values.removeRange(_half, c.size);
+      c._link(novNode as BPLeaf<K, V>);
     } else {
       novNode = BPNode._internal(c._keys.getRange(_half, c.size));
       novNode._addBranches(c._branches.getRange(_half, c.size));
@@ -159,12 +158,12 @@ class BPlusTree<K extends Comparable<K>, V> {
 
     if (c._parent != null) {
       var i = 0;
-      while (c._parent._branches[i++] != c);
-      c._parent._insertKey(i, novNode._keys[0]);
-      c._parent._insertBranch(i, novNode);
+      while (c._parent!._branches[i++] != c);
+      c._parent!._insertKey(i, novNode._keys[0]);
+      c._parent!._insertBranch(i, novNode);
     } else {
       _root = BPNode._internal([c._keys[0], novNode._keys[0]]);
-      _root._addBranches([c, novNode]);
+      _root!._addBranches([c, novNode]);
     }
   }
 
@@ -176,31 +175,31 @@ class BPlusTree<K extends Comparable<K>, V> {
         if (d.isLeaf && d.isEmpty) {
           _root = null;
         } else if (!d.isLeaf && d.size == 1) {
-          _root = root._branches[0];
-          _root._parent = null;
+          _root = root!._branches[0];
+          _root!._parent = null;
         }
         break;
       } else {
         i = 0;
-        while (d._parent._branches[i] != d) i++;
+        while (d._parent!._branches[i] != d) i++;
         if (i > 0) {
-          if (_isRich(d._parent._branches[i - 1])) {
-            _rotateRight(d._parent, i - 1);
+          if (_isRich(d._parent!._branches[i - 1])) {
+            _rotateRight(d._parent!, i - 1);
             break;
-          } else if (i < d._parent.size - 1 &&
-              _isRich(d._parent._branches[i + 1])) {
-            _rotateLeft(d._parent, i + 1);
+          } else if (i < d._parent!.size - 1 &&
+              _isRich(d._parent!._branches[i + 1])) {
+            _rotateLeft(d._parent!, i + 1);
             break;
           } else {
             _mergeIntoLeft(d, i);
-            d = d._parent;
+            d = d._parent!;
           }
-        } else if (_isRich(d._parent._branches[i + 1])) {
-          _rotateLeft(d._parent, i + 1);
+        } else if (_isRich(d._parent!._branches[i + 1])) {
+          _rotateLeft(d._parent!, i + 1);
           break;
         } else {
-          _mergeIntoLeft(d._parent._branches[i + 1], i + 1);
-          d = d._parent;
+          _mergeIntoLeft(d._parent!._branches[i + 1], i + 1);
+          d = d._parent!;
         }
       }
     }
@@ -209,20 +208,20 @@ class BPlusTree<K extends Comparable<K>, V> {
   bool _isRich(BPNode<K> c) => c.size > _half;
 
   void _mergeIntoLeft(BPNode<K> c, int i) {
-    var leftSib = c._parent._branches[i - 1];
+    var leftSib = c._parent!._branches[i - 1];
     leftSib._addKeys(c._keys);
-    c._parent._removeKeyAt(i);
-    c._parent._removeBranchAt(i);
+    c._parent!._removeKeyAt(i);
+    c._parent!._removeBranchAt(i);
     if (c.isLeaf) {
       (leftSib as BPLeaf<K, V>)._addValues((c as BPLeaf<K, V>)._values);
-      (leftSib as BPLeaf<K, V>).next = (c as BPLeaf<K, V>).next;
-      (c as BPLeaf<K, V>).next?.prev = (leftSib as BPLeaf<K, V>);
+      leftSib.next = c.next;
+      c.next!.prev = leftSib;
     } else {
       leftSib._addBranches(c._branches);
     }
   }
 
-  void _traverse(BPNode<K> r, void f(BPNode<K> r)) {
+  void _traverse(BPNode<K>? r, void f(BPNode<K> r)) {
     if (r == null) return;
     f(r);
     if (!r.isLeaf) for (var b in r._branches) _traverse(b, f);
@@ -231,8 +230,8 @@ class BPlusTree<K extends Comparable<K>, V> {
 
 class BPNode<K extends Comparable<K>> {
   List<K> _keys;
-  BPNode<K> _parent;
-  List<BPNode<K>> _branches;
+  BPNode<K>? _parent;
+  List<BPNode<K>> _branches = [];
 
   BPNode(K key) : _keys = [] {
     _keys.add(key);
@@ -265,7 +264,7 @@ class BPNode<K extends Comparable<K>> {
   }
 
   void _addBranches(Iterable<BPNode<K>> children) {
-    _branches ??= [];
+    // _branches ??= [];
     _branches.addAll(children);
     for (var c in children) c._parent = this;
   }
@@ -281,7 +280,7 @@ class BPNode<K extends Comparable<K>> {
 
 class BPLeaf<K extends Comparable<K>, V> extends BPNode<K> {
   List<V> _values;
-  BPLeaf<K, V> prev, next;
+  BPLeaf<K, V>? prev, next;
 
   BPLeaf(K key, V value)
       : _values = [],
@@ -297,7 +296,7 @@ class BPLeaf<K extends Comparable<K>, V> extends BPNode<K> {
 
   bool get isLeaf => true;
 
-  V valueOf(K key) {
+  V? valueOf(K key) {
     var i = _keys.indexOf(key);
     return i != -1 ? _values[i] : null;
   }
@@ -323,7 +322,7 @@ class BPLeaf<K extends Comparable<K>, V> extends BPNode<K> {
   void _link(BPLeaf<K, V> other) {
     if (next != null) {
       other.next = next;
-      next.prev = other;
+      next!.prev = other;
     }
     next = other;
     other.prev = this;

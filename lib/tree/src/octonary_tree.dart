@@ -1,8 +1,8 @@
 class OctonaryTree<E extends Comparable<E>> {
-  OctalNode<E> _root;
+  OctalNode<E>? _root;
   int _elementsCount;
 
-  factory OctonaryTree.of(Iterable<Comparable<E>> elements) {
+  factory OctonaryTree.of(Iterable<E> elements) {
     var tree = OctonaryTree<E>();
     for (var e in elements) tree.insert(e);
     return tree;
@@ -11,7 +11,7 @@ class OctonaryTree<E extends Comparable<E>> {
   OctonaryTree() : _elementsCount = 0;
 
   int get elementsCount => _elementsCount;
-  OctalNode<E> get root => _root;
+  OctalNode<E>? get root => _root;
 
   int get height {
     var h = 0, c = root;
@@ -26,7 +26,7 @@ class OctonaryTree<E extends Comparable<E>> {
 
   bool contains(E value) => find(value) != null;
 
-  OctalNode<E> find(E value) {
+  OctalNode<E>? find(E value) {
     var c = root;
     while (c != null) {
       var i = 0;
@@ -72,10 +72,10 @@ class OctonaryTree<E extends Comparable<E>> {
   }
 
   void traverse(void func(List<E> items)) {
-    if (!isEmpty) _traverse(_root, func);
+    if (!isEmpty) _traverse(_root!, func);
   }
 
-  void _fixAfterIns(OctalNode<E> c) {
+  void _fixAfterIns(OctalNode<E>? c) {
     while (c != null && c.isOverflow) {
       var t = _split(c);
       c = t.parent != null ? _absorb(t) : null;
@@ -93,8 +93,8 @@ class OctonaryTree<E extends Comparable<E>> {
     nc.parent = c.parent;
     if (c.parent != null) {
       var i = 0;
-      while (c.parent.branches[i] != c) i++;
-      c.parent.branches[i] = nc;
+      while (c.parent!.branches[i] != c) i++;
+      c.parent!.branches[i] = nc;
     } else {
       _root = nc;
     }
@@ -111,7 +111,7 @@ class OctonaryTree<E extends Comparable<E>> {
 
   OctalNode<E> _absorb(OctalNode<E> c) {
     var i = 0, p = c.parent;
-    while (p.branches[i] != c) i++;
+    while (p!.branches[i] != c) i++;
     p.items.insertAll(i, c.items);
     p.branches.replaceRange(i, i + 1, c.branches);
     c.branches.forEach((b) => b.parent = p);
@@ -129,8 +129,8 @@ class OctonaryTree<E extends Comparable<E>> {
     } else {
       var ct = 0;
       while (d.size < (1 << ct + 1) - 1 && d.parent != null) {
-        _collapse(d.parent);
-        d = d.parent;
+        _collapse(d.parent!);
+        d = d.parent!;
         ct++;
       }
       // if (d.size < (1 << ct + 1) - 1) ct--;
@@ -185,7 +185,7 @@ class OctalNode<E extends Comparable<E>> {
   static final int capacity = 7;
   List<E> items;
   List<OctalNode<E>> branches;
-  OctalNode<E> parent;
+  OctalNode<E>? parent;
 
   factory OctalNode(List<E> elements) {
     if (elements.length > capacity) throw StateError('too many elements.');

@@ -1,9 +1,9 @@
 /// A simple array based on fixed-length list.
 
 class Array<E> {
-  final List<E> _array;
+  final List<E?> _array;
 
-  Array(int length) : _array = List<E>(length);
+  Array(int length) : _array = List.filled(length, null);
 
   int get length => _array.length;
 
@@ -18,7 +18,7 @@ class Array<E> {
 
   String toString() => _array.toString();
 
-  E operator [](int index) => _array[index];
+  E? operator [](int index) => _array[index];
 
   void operator []=(int index, E value) => _array[index] = value;
 }

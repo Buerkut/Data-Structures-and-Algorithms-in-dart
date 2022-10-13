@@ -3,9 +3,9 @@ import 'package:data_struct/linked_list/linked_list.dart';
 import './hash_func.dart' show DJBHash;
 
 class LinkedHashTable<K, V> {
-  List<LinkedList<_TableEntry<K, V>>> _table;
+  List<LinkedList<_TableEntry<K, V>>?> _table;
   int _itemCount, _filledCells;
-  final _initalSize = 64, loadFactor = 0.8;
+  static final _initalSize = 64, loadFactor = 0.8;
 
   int get length => _itemCount;
   bool get isEmpty => _itemCount == 0;
@@ -22,9 +22,8 @@ class LinkedHashTable<K, V> {
 
   LinkedHashTable()
       : _itemCount = 0,
-        _filledCells = 0 {
-    _table = List(_initalSize);
-  }
+        _filledCells = 0,
+        _table = List.filled(_initalSize, null);
 
   Iterable<K> get keys sync* {
     for (var bucket in _table)
@@ -40,7 +39,7 @@ class LinkedHashTable<K, V> {
       key != null && _findInBucket(_table[_hash(key)], key) != null;
 
   void clear() {
-    _table = List(_initalSize);
+    _table = List.filled(_initalSize, null);
     _itemCount = _filledCells = 0;
   }
 
@@ -51,11 +50,11 @@ class LinkedHashTable<K, V> {
     if (_isOverloaded) _dilate();
   }
 
-  V remove(K key) {
+  V? remove(K key) {
     var i = _hash(key), e = _findInBucket(_table[i], key);
-    if (e != null && _table[i].remove(e)) {
+    if (e != null && _table[i]!.remove(e)) {
       _itemCount--;
-      if (_table[i].isEmpty) {
+      if (_table[i]!.isEmpty) {
         _table[i] = null;
         _filledCells--;
       }
@@ -63,7 +62,7 @@ class LinkedHashTable<K, V> {
     return e?.value;
   }
 
-  V operator [](K key) =>
+  V? operator [](K key) =>
       key == null ? null : _findInBucket(_table[_hash(key)], key)?.value;
 
   void operator []=(K key, V value) => insert(key, value);
@@ -85,20 +84,21 @@ class LinkedHashTable<K, V> {
         _table[i] = LinkedList();
         _filledCells++;
       }
-      _table[i].add(entry);
+      _table[i]!.add(entry);
       _itemCount++;
     }
   }
 
   void _dilate() {
     var oldTable = _table;
-    _table = List(oldTable.length << 1);
+    _table = List.filled(oldTable.length << 1, null);
     _itemCount = _filledCells = 0;
     for (var bucket in oldTable)
       if (bucket != null) for (var e in bucket) _insert(e);
   }
 
-  _TableEntry<K, V> _findInBucket(LinkedList<_TableEntry<K, V>> bucket, K key) {
+  _TableEntry<K, V>? _findInBucket(
+      LinkedList<_TableEntry<K, V>>? bucket, K key) {
     var ptr = bucket?.head;
     while (ptr != null && ptr.value.key != key) ptr = ptr.next;
     return ptr?.value;

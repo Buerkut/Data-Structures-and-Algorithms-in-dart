@@ -1,5 +1,8 @@
-List<E> merge<E extends Comparable>(List<E> sortedA, List<E> sortedB) {
-  var merged = List<E>(sortedA.length + sortedB.length), ai = 0, bi = 0, mi = 0;
+List<E?> merge<E extends Comparable>(List<E> sortedA, List<E> sortedB) {
+  var merged = List<E?>.filled(sortedA.length + sortedB.length, null),
+      ai = 0,
+      bi = 0,
+      mi = 0;
   while (ai < sortedA.length && bi < sortedB.length) {
     merged[mi++] =
         sortedA[ai].compareTo(sortedB[bi]) <= 0 ? sortedA[ai++] : sortedB[bi++];
@@ -25,7 +28,10 @@ void _mergeSort<E extends Comparable>(List<E> a, int start, int end) {
 }
 
 void _merge<E extends Comparable>(List<E> a, int start, int mid, int end) {
-  var merged = List<E>(end - start + 1), mi = 0, li = start, ri = mid + 1;
+  var merged = List<E?>.filled(end - start + 1, null),
+      mi = 0,
+      li = start,
+      ri = mid + 1;
   while (li <= mid && ri <= end) {
     merged[mi++] = a[li].compareTo(a[ri]) <= 0 ? a[li++] : a[ri++];
   }
@@ -34,5 +40,5 @@ void _merge<E extends Comparable>(List<E> a, int start, int mid, int end) {
   } else {
     while (ri <= end) merged[mi++] = a[ri++];
   }
-  for (var e in merged) a[start++] = e;
+  for (var e in merged) a[start++] = e!;
 }
