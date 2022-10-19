@@ -13,10 +13,17 @@ class MinHeap<E extends Comparable<E>> {
 
   int get size => _size;
 
-  E? get top => _size == 0 ? null : _heap[0];
+  E get top {
+    if (isEmpty) throw StateError('The heap is empty!');
+    return _heap[0];
+  }
 
-  E? popTop() => _size == 0 ? null : pop(1).first;
+  E popTop() {
+    if (isEmpty) throw StateError('The heap is empty!');
+    return pop(1).first;
+  }
 
+  // pop the first n element.
   Iterable<E> pop(int n) sync* {
     if (n > _size) n = _size;
     while (n-- > 0) {
@@ -37,6 +44,7 @@ class MinHeap<E extends Comparable<E>> {
     var e = _heap[i];
     _swap(i, --_size);
     _minHeapify(i);
+    _bubble(i);
     return e;
   }
 
