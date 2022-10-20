@@ -13,6 +13,15 @@ void main() {
   indexMinPQ.changeItem(0, "Z");
   var mi;
   var sb = StringBuffer();
+  // while (!indexMinPQ.isEmpty) {
+  //   mi = indexMinPQ.delMin();
+  //   sb.write('$mi, ');
+  // }
+  // print(sb);
+
+  indexMinPQ.delete(2);
+  // var mi;
+  sb.clear();
   while (!indexMinPQ.isEmpty) {
     mi = indexMinPQ.delMin();
     sb.write('$mi, ');

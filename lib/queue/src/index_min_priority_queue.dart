@@ -41,8 +41,8 @@ class IndexMinPriorityQueue<E extends Comparable<E>> {
     var k = _qp[i];
     _exch(k, _size);
     // _qp[_pq[_size]] = -1;
-    _qp[i] = -1;
     _pq[_size--] = -1;
+    _qp[i] = -1;
     _items[i] = null;
     // _size--;
     _sink(k);

@@ -96,7 +96,7 @@ class Graph {
   void displayMstTree() {
     var mstTree = mst();
     for (var edge in mstTree) {
-      print('${_vertices[edge.from]!.label} --> ${_vertices[edge.to]!.label}');
+      print('${_vertices[edge.v]!.label} --> ${_vertices[edge.w]!.label}');
     }
   }
 
