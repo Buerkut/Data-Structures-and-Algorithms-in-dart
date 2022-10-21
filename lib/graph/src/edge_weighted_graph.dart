@@ -1,3 +1,4 @@
+import 'package:data_struct/queue/queue.dart' show IndexMinPriorityQueue;
 import './edge.dart';
 
 class EdgeWeightedGraph {
@@ -31,5 +32,36 @@ class EdgeWeightedGraph {
         if (v < e.other(v)) es.add(e);
     }
     return es;
+  }
+
+  Iterable<Edge> primMst() {
+    var edgeTo = List<Edge?>.filled(vCount, null);
+    var distTo = List.filled(vCount, double.infinity);
+    var marked = List.filled(vCount, false);
+    var pq = IndexMinPriorityQueue<num>(vCount);
+
+    distTo[0] = 0.0;
+    pq.insert(0, 0.0);
+
+    visit(int v) {
+      marked[v] = true;
+      for (var e in _adj[v]) {
+        int w = e.other(v);
+        if (marked[w]) continue;
+
+        if (e.weight < distTo[w]) {
+          edgeTo[w] = e;
+          distTo[w] = e.weight;
+          if (pq.contains(w))
+            pq.changeItem(w, e.weight);
+          else
+            pq.insert(w, e.weight);
+        }
+      }
+    }
+
+    while (!pq.isEmpty) visit(pq.delMin());
+
+    return edgeTo.whereType<Edge>();
   }
 }
