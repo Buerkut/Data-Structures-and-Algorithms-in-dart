@@ -17,3 +17,5 @@ doc/api/
 
 # Files created by os.
 .DS_Store
+
+bin/main.dart
