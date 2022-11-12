@@ -5,11 +5,9 @@ import './edge.dart';
 class EdgeWeightedGraph {
   final int vCount;
   int _edgeCount = 0;
-  late List<List<Edge>> _adj;
+  List<List<Edge>> _adj;
 
-  EdgeWeightedGraph(this.vCount) {
-    _adj = List.generate(vCount, (_) => []);
-  }
+  EdgeWeightedGraph(this.vCount) : _adj = List.generate(vCount, (_) => []);
 
   int get edgeCount => _edgeCount;
 
@@ -25,14 +23,11 @@ class EdgeWeightedGraph {
 
   List<Edge> adj(int v) => _adj[v];
 
-  Iterable<Edge> get edges {
-    var es = <Edge>[];
-    for (int v = 0; v < vCount; v++) {
+  Iterable<Edge> get edges sync* {
+    for (var v = 0; v < vCount; v++)
       for (var e in _adj[v])
         // 无向图避免重复添加边
-        if (v < e.other(v)) es.add(e);
-    }
-    return es;
+        if (v < e.other(v)) yield e;
   }
 
   Iterable<Edge> primMst() {
@@ -66,12 +61,12 @@ class EdgeWeightedGraph {
     return edgeTo.whereType<Edge>();
   }
 
-  Iterable<Edge> kruskalMst() {
+  Iterable<Edge> kruskalMst() sync* {
     var pq = PriorityQueue(edges);
     var uf = UnionFindTree(vCount);
-    var mst = <Edge>[];
+    var ct = 0;
 
-    while (!pq.isEmpty && mst.length < vCount - 1) {
+    while (!pq.isEmpty && ct < vCount - 1) {
       var e = pq.popTop();
       var v = e.either();
       var w = e.other(v);
@@ -79,9 +74,8 @@ class EdgeWeightedGraph {
       if (uf.connected(v, w)) continue;
 
       uf.union(v, w);
-      mst.add(e);
+      ct++;
+      yield e;
     }
-
-    return mst;
   }
 }
