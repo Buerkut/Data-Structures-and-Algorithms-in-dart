@@ -38,9 +38,8 @@ class UnionFindTree {
 
   int find(int p) {
     while (true) {
-      if (p == _eleAndGroup[p]) {
-        return p;
-      }
+      if (p == _eleAndGroup[p]) return p;
+
       p = _eleAndGroup[p];
     }
   }
@@ -58,7 +57,6 @@ class UnionFindTree {
       _sz[pRoot] += _sz[qRoot];
     }
 
-    _eleAndGroup[pRoot] = qRoot;
     _groupCount--;
   }
 }

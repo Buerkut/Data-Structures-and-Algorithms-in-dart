@@ -19,5 +19,5 @@ class Edge implements Comparable<Edge> {
   }
 
   @override
-  String toString() => '$v-->$w, weight = $weight';
+  String toString() => '$v->$w, wt = $weight';
 }

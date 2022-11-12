@@ -37,4 +37,8 @@ void main() {
   g.addEdge(e16);
 
   for (var e in g.primMst()) print(e);
+
+  print('-----------------------------------------');
+
+  for (var e in g.kruskalMst()) print(e);
 }

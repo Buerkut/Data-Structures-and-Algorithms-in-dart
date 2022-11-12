@@ -1,4 +1,5 @@
-import 'package:data_struct/queue/queue.dart' show IndexMinPriorityQueue;
+import 'package:data_struct/queue/queue.dart';
+import 'package:data_struct/union_find/union_find.dart';
 import './edge.dart';
 
 class EdgeWeightedGraph {
@@ -24,7 +25,7 @@ class EdgeWeightedGraph {
 
   List<Edge> adj(int v) => _adj[v];
 
-  List<Edge> get edges {
+  Iterable<Edge> get edges {
     var es = <Edge>[];
     for (int v = 0; v < vCount; v++) {
       for (var e in _adj[v])
@@ -63,5 +64,24 @@ class EdgeWeightedGraph {
     while (!pq.isEmpty) visit(pq.delMin());
 
     return edgeTo.whereType<Edge>();
+  }
+
+  Iterable<Edge> kruskalMst() {
+    var pq = PriorityQueue(edges);
+    var uf = UnionFindTree(vCount);
+    var mst = <Edge>[];
+
+    while (!pq.isEmpty && mst.length < vCount - 1) {
+      var e = pq.popTop();
+      var v = e.either();
+      var w = e.other(v);
+
+      if (uf.connected(v, w)) continue;
+
+      uf.union(v, w);
+      mst.add(e);
+    }
+
+    return mst;
   }
 }
