@@ -1,3 +1,4 @@
+export 'src/bellman_ford_spath.dart';
 export 'src/directed_edge.dart';
 export 'src/directed_graph.dart';
 export 'src/dijkstra_short_path.dart';

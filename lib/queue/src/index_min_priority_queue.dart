@@ -13,13 +13,14 @@ class IndexMinPriorityQueue<E extends Comparable<E>> {
 
   bool get isEmpty => _size == 0;
 
+  bool get isNotEmpty => _size > 0;
+
   int get minIndex => _pq[1];
 
   bool contains(int k) => _qp[k] != -1;
 
   void insert(int k, E e) {
-    if (contains(k)) throw StateError('index already exist.');
-    // _size++;
+    if (contains(k)) throw StateError('Index already exist.');
     _items[k] = e;
     _pq[++_size] = k;
     _qp[k] = _size;
@@ -32,7 +33,6 @@ class IndexMinPriorityQueue<E extends Comparable<E>> {
     _qp[_pq[_size]] = -1;
     _pq[_size--] = -1;
     _items[mi] = null;
-    // _size--;
     _sink(1);
     return mi;
   }
@@ -40,11 +40,9 @@ class IndexMinPriorityQueue<E extends Comparable<E>> {
   void delete(int i) {
     var k = _qp[i];
     _exch(k, _size);
-    // _qp[_pq[_size]] = -1;
     _pq[_size--] = -1;
     _qp[i] = -1;
     _items[i] = null;
-    // _size--;
     _sink(k);
     _swim(k);
   }

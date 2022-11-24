@@ -3,11 +3,11 @@ import 'package:data_struct/union_find/union_find.dart';
 import './edge.dart';
 
 class EdgeWeightedGraph {
-  final int vCount;
+  final int nVerts;
   int _edgeCount = 0;
   List<List<Edge>> _adj;
 
-  EdgeWeightedGraph(this.vCount) : _adj = List.generate(vCount, (_) => []);
+  EdgeWeightedGraph(this.nVerts) : _adj = List.generate(nVerts, (_) => []);
 
   int get edgeCount => _edgeCount;
 
@@ -24,17 +24,17 @@ class EdgeWeightedGraph {
   List<Edge> adj(int v) => _adj[v];
 
   Iterable<Edge> get edges sync* {
-    for (var v = 0; v < vCount; v++)
+    for (var v = 0; v < nVerts; v++)
       for (var e in _adj[v])
         // 无向图避免重复添加边
         if (v < e.other(v)) yield e;
   }
 
   Iterable<Edge> primMst() {
-    var edgeTo = List<Edge?>.filled(vCount, null);
-    var distTo = List.filled(vCount, double.infinity);
-    var marked = List.filled(vCount, false);
-    var pq = IndexMinPriorityQueue<num>(vCount);
+    var edgeTo = List<Edge?>.filled(nVerts, null);
+    var distTo = List.filled(nVerts, double.infinity);
+    var marked = List.filled(nVerts, false);
+    var pq = IndexMinPriorityQueue<num>(nVerts);
 
     distTo[0] = 0.0;
     pq.insert(0, 0.0);
@@ -56,17 +56,17 @@ class EdgeWeightedGraph {
       }
     }
 
-    while (!pq.isEmpty) visit(pq.delMin());
+    while (pq.isNotEmpty) visit(pq.delMin());
 
     return edgeTo.whereType<Edge>();
   }
 
   Iterable<Edge> kruskalMst() sync* {
     var pq = PriorityQueue(edges);
-    var uf = UnionFindTree(vCount);
+    var uf = UnionFindTree(nVerts);
     var ct = 0;
 
-    while (!pq.isEmpty && ct < vCount - 1) {
+    while (!pq.isEmpty && ct < nVerts - 1) {
       var e = pq.popTop();
       var v = e.either();
       var w = e.other(v);

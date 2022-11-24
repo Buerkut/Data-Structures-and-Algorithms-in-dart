@@ -22,7 +22,7 @@ void main() {
   indexMinPQ.delete(2);
   // var mi;
   sb.clear();
-  while (!indexMinPQ.isEmpty) {
+  while (indexMinPQ.isNotEmpty) {
     mi = indexMinPQ.delMin();
     sb.write('$mi, ');
   }
