@@ -13,6 +13,9 @@ void main() {
   var e9 = DirectedEdge(4, 0, 2);
   var e10 = DirectedEdge(4, 3, 7);
 
+  // negative cycle test
+  // var e11 = DirectedEdge(0, 3, 2);
+
   g.addEdge(e1);
   g.addEdge(e2);
   g.addEdge(e3);
@@ -24,14 +27,24 @@ void main() {
   g.addEdge(e9);
   g.addEdge(e10);
 
-  var dsp = DijkstraSP(g, 0);
-  print(dsp.distTo[1]);
-  for (var e in dsp.pathTo(1)) print(e);
+  // negative cycle test
+  // g.addEdge(e11);
+
+  var src = 0, dest = 4;
+
+  // if the graph has negative cycle, Dijkstra algorithm doesn't work.
+  var dsp = DijkstraSP(g, src);
+  print('');
+  print('src = $src, dest = $dest\n');
+  print(dsp.distTo[dest]);
+  for (var e in dsp.pathTo(dest)) print(e);
 
   print('\n-----------------------\n');
 
-  var bfsp = BellmanFordSP(g, 0);
-  print('has negative cycle: ${bfsp.hasNegativeCycle}');
-  print(bfsp.distTo[1]);
-  for (var e in bfsp.pathTo(1)) print(e);
+  var bfsp = BellmanFordSP(g, src);
+  print('has negative cycle: ${bfsp.hasNegativeCycle}\n');
+  print('src = $src, dest = $dest\n');
+  print(bfsp.distTo[dest]);
+  for (var e in bfsp.pathTo(dest)) print(e);
+  print('');
 }
