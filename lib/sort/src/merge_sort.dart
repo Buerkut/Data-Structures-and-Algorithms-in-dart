@@ -15,19 +15,19 @@ List<E?> merge<E extends Comparable>(List<E> sortedA, List<E> sortedB) {
   return merged;
 }
 
-void mergeSort<E extends Comparable>(List<E> a) {
+void mergeSort<E extends Comparable<E>>(List<E> a) {
   if (a.length > 1) _mergeSort(a, 0, a.length - 1);
 }
 
-void _mergeSort<E extends Comparable>(List<E> a, int start, int end) {
+void _mergeSort<E extends Comparable<E>>(List<E> a, int start, int end) {
   if (start == end) return;
-  int mid = (start + end) ~/ 2;
+  var mid = (start + end) ~/ 2;
   _mergeSort(a, start, mid);
   _mergeSort(a, mid + 1, end);
   _merge(a, start, mid, end);
 }
 
-void _merge<E extends Comparable>(List<E> a, int start, int mid, int end) {
+void _merge<E extends Comparable<E>>(List<E> a, int start, int mid, int end) {
   var merged = List<E?>.filled(end - start + 1, null),
       mi = 0,
       li = start,

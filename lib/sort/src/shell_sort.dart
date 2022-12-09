@@ -1,4 +1,4 @@
-void shellSort<E extends Comparable>(List<E> a) {
+void shellSort<E extends Comparable<E>>(List<E> a) {
   for (var i = _initInterval(a); i > 0; i = (i - 1) ~/ 3) {
     for (var g = 0; g < i; g++) {
       for (var j = i + g; j < a.length; j += i) {
