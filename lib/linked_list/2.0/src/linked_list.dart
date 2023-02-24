@@ -279,7 +279,7 @@ class LinkedList<E> extends LinkedListBase<E> implements Iterable<E> {
     }
   }
 
-  List<E> toList({bool growable: true}) {
+  List<E> toList({bool growable = true}) {
     return List<E>.from(this, growable: growable);
   }
 

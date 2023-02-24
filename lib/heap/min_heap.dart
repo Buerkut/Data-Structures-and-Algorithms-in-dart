@@ -2,8 +2,8 @@ class MinHeap<E extends Comparable<E>> {
   late List<E> _heap;
   late int _size;
 
-  MinHeap([Iterable<E>? elements]) {
-    elements ??= <E>[];
+  MinHeap(Iterable<E> elements) {
+    // elements ??= <E>[];
     _heap = elements.toList();
     _size = elements.length;
     _buildMinHeap();

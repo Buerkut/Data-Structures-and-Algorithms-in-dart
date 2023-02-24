@@ -1,4 +1,4 @@
-void quickSort<E extends Comparable>(List<E> a) {
+void quickSort<E extends Comparable<E>>(List<E> a) {
   _quickSort(a, 0, a.length - 1);
 }
 

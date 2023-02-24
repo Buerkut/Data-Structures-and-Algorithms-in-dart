@@ -1,4 +1,4 @@
-List<E?> merge<E extends Comparable>(List<E> sortedA, List<E> sortedB) {
+List<E?> merge<E extends Comparable<E>>(List<E> sortedA, List<E> sortedB) {
   var merged = List<E?>.filled(sortedA.length + sortedB.length, null),
       ai = 0,
       bi = 0,
