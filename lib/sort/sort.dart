@@ -4,6 +4,7 @@ export 'src/count_sort.dart';
 export 'src/heap_sort.dart';
 export 'src/insert_sort.dart';
 export 'src/merge_sort.dart';
+export 'src/min_max_value.dart';
 export 'src/quick_sort.dart';
 export 'src/radix_sort.dart';
 export 'src/select_sort.dart';
