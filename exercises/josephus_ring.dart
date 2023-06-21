@@ -1,5 +1,5 @@
 void main() {
-  var n = 16, m = 3;
+  var n = 10, m = 3;
   var outcome = josephusRing1(n, m);
   print(outcome);
 

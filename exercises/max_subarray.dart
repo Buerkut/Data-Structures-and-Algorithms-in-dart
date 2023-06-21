@@ -1,14 +1,23 @@
+import 'package:data_struct/dynamic_programming/max_subarray.dart';
+
 void main() {
-  var arr = <double>[-7, -2, 3, -4];
-  // var arr = [13, -3, -25, 20, -3, -16, -23, 18, 20, -7, 12, -5, -22, 15, -4, 7];
+  var arr = <double>[-9, -4, 5, -1, 8, -3, 2];
+
   print(findMaxSubarrayBrute(arr));
   print(findMaxSubarrayGreedy(arr));
   print(findMaxSubarrayDivideAndConquer(arr));
+  print(findMaxSubarrayDP(arr));
+  print(findMaxSubarrayDP2(arr));
+  print(findMaxSubarrayDP3(arr));
 }
 
-List<num> findMaxSubarrayBrute(List<double> arr) {
+// （int begin, int end, double maxSum):
+// begin: the begin of max subarray, inclusive;
+// end: the end of max subarray, exclusive;
+// maxSum: the max sum of subarray.
+(int, int, double) findMaxSubarrayBrute(List<double> arr) {
   var maxSum = double.negativeInfinity;
-  late List<num> outcome;
+  late (int, int, double) outcome;
 
   for (var i = 0; i < arr.length; i++) {
     var sum = 0.0;
@@ -16,7 +25,7 @@ List<num> findMaxSubarrayBrute(List<double> arr) {
       sum += arr[j];
       if (sum > maxSum) {
         maxSum = sum;
-        outcome = [i, j, maxSum];
+        outcome = (i, j + 1, maxSum);
       }
     }
   }
@@ -24,29 +33,25 @@ List<num> findMaxSubarrayBrute(List<double> arr) {
   return outcome;
 }
 
-List<num> findMaxSubarrayGreedy(List<double> arr) {
-  var maxSum = double.negativeInfinity;
-  var leftIndexes = <int>[];
-  late int rightIndex;
-
-  var sum = 0.0;
+(int, int, double) findMaxSubarrayGreedy(List<double> arr) {
+  var b = 0, l = 0, len = 0, sum = 0.0, maxSum = double.negativeInfinity;
   for (var i = 0; i < arr.length; i++) {
     sum += arr[i];
-    if (sum > maxSum) {
+    l++;
+    if (maxSum < sum) {
       maxSum = sum;
-      rightIndex = i;
+      b = i;
+      len = l;
     }
 
     //如果结果已经为负数
     if (sum < 0) {
       sum = 0;
-      leftIndexes.add(i + 1);
+      l = 0;
     }
   }
 
-  print(leftIndexes);
-  var leftIndex = leftIndexes.lastWhere((index) => index < rightIndex);
-  return [leftIndex, rightIndex, maxSum];
+  return (b - len + 1, b + 1, maxSum);
 }
 
 List<num> findMaxSubarrayDivideAndConquer(List<double> arr) {
@@ -74,7 +79,7 @@ List<num> findMaxSubarrayDivideAndConquer(List<double> arr) {
       }
     }
 
-    return [leftIndex, rightIndex, maxSumLeft + maxSumRight];
+    return [leftIndex, rightIndex + 1, maxSumLeft + maxSumRight];
   }
 
   List<num> findMaxSubarrayDC(List<double> arr, int low, int high) {

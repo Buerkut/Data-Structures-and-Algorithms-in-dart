@@ -1,5 +1,9 @@
 int _count = 0;
 
+void main() {
+  hanoi(6);
+}
+
 void hanoi(int n) {
   _hanoi(n, 'A', 'B', 'C');
   print('---------------------------');

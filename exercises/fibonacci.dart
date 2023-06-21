@@ -1,7 +1,7 @@
 import 'package:data_struct/dynamic_programming/fibonacci.dart';
 
 void main() {
-  var n = 11;
+  var n = 40;
   print('n : $n');
 
   var r = optimizedBottomUpFibonacci(n);
@@ -13,6 +13,6 @@ void main() {
   r = memoizedFibonacci(n);
   print('n2 in fib-seq : $r');
 
-  // r = fibonacci(n);
-  // print('n1 in fib-seq : $r');
+  r = fibonacci(n);
+  print('n1 in fib-seq : $r');
 }
