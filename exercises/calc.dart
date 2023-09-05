@@ -3,6 +3,7 @@ import 'package:data_struct/stack/samples/calculator.dart' as calc1;
 import 'package:data_struct/stack/samples/calculator2.dart' as calc2;
 
 void main() {
+  print('please input the expression:');
   var exp = stdin.readLineSync();
   while (exp != 'exit' && exp != null) {
     try {

@@ -1,9 +1,9 @@
-int fibonacci(int n) {
+int fib(int n) {
   if (n <= 2) return 1;
-  return fibonacci(n - 1) + fibonacci(n - 2);
+  return fib(n - 1) + fib(n - 2);
 }
 
-int memoizedFibonacci(int n) {
+int memoizedFib(int n) {
   if (n <= 2) return 1;
 
   var r = List.filled(n + 1, 0);
@@ -18,7 +18,7 @@ int memoizedFibonacci(int n) {
   return _calc(n);
 }
 
-int bottomUpFibonacci(int n) {
+int bottomUpFib(int n) {
   if (n <= 2) return 1;
 
   var fib = List.filled(n + 1, 0);
@@ -28,7 +28,7 @@ int bottomUpFibonacci(int n) {
   return fib[n];
 }
 
-int optimizedBottomUpFibonacci(int n) {
+int optimizedBottomUpFib(int n) {
   if (n < 2) return n;
 
   var p = 0, r = 1;

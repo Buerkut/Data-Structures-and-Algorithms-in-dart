@@ -4,15 +4,15 @@ void main() {
   var n = 40;
   print('n : $n');
 
-  var r = optimizedBottomUpFibonacci(n);
+  var r = optimizedBottomUpFib(n);
   print('n4 in fib-seq : $r');
 
-  r = bottomUpFibonacci(n);
+  r = bottomUpFib(n);
   print('n3 in fib-seq : $r');
 
-  r = memoizedFibonacci(n);
+  r = memoizedFib(n);
   print('n2 in fib-seq : $r');
 
-  r = fibonacci(n);
+  r = fib(n);
   print('n1 in fib-seq : $r');
 }

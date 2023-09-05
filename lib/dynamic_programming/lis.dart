@@ -13,6 +13,7 @@ void main() {
   print(lis2(a));
   print(lis3(a));
   print(lis4(a));
+  print(lis6(a));
   var sq = lis5(a);
   print(sq);
   print(sq.length);
@@ -122,77 +123,17 @@ List<int> lis5(List<int> a) {
   return lis;
 }
 
-// inconsecutive, O(nlgn)
-// Return: the lis itself.
-// Too many implements for getting lis itself.
-// List<int> lis8(List<int> a) {
-//   var t = List.filled(a.length, 0), len = 0;
-//   for (var x in a) {
-//     var i = 0, j = len;
-//     while (i != j) {
-//       var m = (i + j) >> 1;
-//       if (t[m] < x) {
-//         i = m + 1;
-//       } else {
-//         j = m;
-//       }
-//     }
-//     t[i] = x;
-//     if (i == len) len++;
-//   }
-
-//   // print('tails: $t');
-
-//   // var t = len - 1, lis = <int>[];
-//   // for (var i = a.length - 1; i >= 0 && t >= 0; i--) {
-//   //   if (a[i] == tails[t]) {
-//   //     lis.add(tails[t--]);
-//   //   } else if (a[i] > tails[t] && a[i] < tails[t + 1]) {
-//   //     lis.add(a[i]);
-//   //   }
-//   // }
-
-//   var p = len - 1, lis = List.filled(len, 0);
-//   for (var i = a.length - 1; i >= 0 && p >= 0; i--) {
-//     // if (a[i] == t[t]) {
-//     //   lis[p] = a[i];
-//     //   p--;
-//     // } else if (a[i] > t[t] && a[i] < t[t + 1]) {
-//     //   lis[p] = a[i];
-//     //   p--;
-//     // }
-
-//   if (a[i] == t[p]) {
-    //   lis[c--] = a[i];
-    //   p--;
-    // } else if (a[i] > t[p] && a[i] < t[p + 1]) {
-    //   lis[c--] = a[i];
-    // }
-//   }
-//   return lis;
-// }
-
 // inconsecutive, O(n*n)
-// in inconsecutive increasing subsequence, the start and end position will be
-// nonsense. so it returns the subsequence itself.
-// There is a bug when a is : [8, 3, 4, 7, 5, 2, 6, 1];
-// List<int> lis9(List<int> a) {
-//   var ml = 0, lis = <int>[];
-//   for (var i = 0; i < a.length; i++) {
-//     var t = a[i], l = 1, clis = [t];
-//     for (var j = i + 1; j < a.length; j++) {
-//       if (a[j] > t) {
-//         t = a[j];
-//         clis.add(t);
-//         l++;
-//       }
-//     }
+int lis6(List<int> a) {
+  var dp = List.filled(a.length, 1), len = 0;
 
-//     if (l > ml) {
-//       ml = l;
-//       lis = clis;
-//     }
-//   }
+  for (int i = 1; i < a.length; i++) {
+    for (int j = 0; j < i; j++) {
+      if (a[j] < a[i] && dp[i] < dp[j] + 1) dp[i] = dp[j] + 1;
+    }
 
-//   return lis;
-// }
+    if (len < dp[i]) len = dp[i];
+  }
+
+  return len;
+}

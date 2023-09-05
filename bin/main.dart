@@ -9,4 +9,7 @@ void main() {
   print(a);
 
   print(getMinMaxInt(a));
+
+  var b = List.generate(10, (_) => 1 + rnd.nextInt(10));
+  print(b);
 }
