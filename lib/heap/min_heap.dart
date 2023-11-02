@@ -2,8 +2,8 @@ class MinHeap<E extends Comparable<E>> {
   late List<E> _heap;
   late int _size;
 
-  MinHeap(Iterable<E> elements) {
-    // elements ??= <E>[];
+  MinHeap([Iterable<E>? elements]) {
+    elements ??= [];
     _heap = elements.toList();
     _size = elements.length;
     _buildMinHeap();
@@ -25,7 +25,7 @@ class MinHeap<E extends Comparable<E>> {
 
   // pop the first n element.
   Iterable<E> pop(int n) sync* {
-    if (n > _size) n = _size;
+    if (n > _size) throw StateError('The heap size is smaller than $n!');
     while (n-- > 0) {
       var e = _heap[0];
       _swap(0, --_size);
@@ -54,10 +54,15 @@ class MinHeap<E extends Comparable<E>> {
     for (var i = (_size >> 1) - 1; i >= 0; i--) _minHeapify(i);
   }
 
+  // 最小堆化函数
   void _minHeapify(int i) {
+    // 初始化左右子节点
     var mi = i, l = (i << 1) + 1, r = (i << 1) + 2;
+    // 如果左子节点存在，且比当前节点小，则更新mi
     if (l < _size && _heap[l].compareTo(_heap[mi]) < 0) mi = l;
+    // 如果右子节点存在，且比当前节点小，则更新mi
     if (r < _size && _heap[r].compareTo(_heap[mi]) < 0) mi = r;
+    // 如果mi不等于当前节点，则交换mi和当前节点，并递归调用_minHeapify函数
     if (mi != i) {
       _swap(i, mi);
       _minHeapify(mi);

@@ -2,8 +2,8 @@ class MaxHeap<E extends Comparable<E>> {
   late List<E> _heap;
   late int _size;
 
-  MaxHeap(Iterable<E> elements) {
-    // elements ??= <E>[];
+  MaxHeap([Iterable<E>? elements]) {
+    elements ??= [];
     _heap = elements.toList();
     _size = elements.length;
     _buildMaxHeap();

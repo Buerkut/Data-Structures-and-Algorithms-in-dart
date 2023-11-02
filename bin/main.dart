@@ -10,6 +10,11 @@ void main() {
 
   print(getMinMaxInt(a));
 
-  var b = List.generate(10, (_) => 1 + rnd.nextInt(10));
+  var b = List.generate(11, (_) => 1 + rnd.nextInt(10));
   print(b);
+
+  final s = [1, 3, 0, 5, 3, 5, 6, 8, 8, 2, 12];
+
+  print(s.length);
+  print(b.length);
 }
